@@ -338,6 +338,17 @@ def build_similarity_matrix(data: pd.DataFrame):
 sim_matrix = build_similarity_matrix(df)
 
 # =========================================================
+# CATEGORY STATE (sidebar'dan ÖNCE OLMALI!)
+# =========================================================
+categories = sorted(df["category"].unique())
+
+# İlk yüklemede tüm kategoriler seçili olsun
+if "selected_categories" not in st.session_state:
+    st.session_state.selected_categories = categories.copy()
+
+selected_categories = st.session_state.selected_categories
+
+# =========================================================
 # SIDEBAR
 # =========================================================
 with st.sidebar:
@@ -359,31 +370,26 @@ with st.sidebar:
     inject_css(theme)
 
     st.markdown("---")
-    
-        # --- KATEGORİ MODAL FİLTRE ---
-    
-    categories = sorted(df["category"].unique())
-    
+
+    # --- PREMIUM MODAL KATEGORİ FİLTRESİ ---
     st.markdown("### Kategoriler")
-    
-    # seçili kategori sayısı
+
     selected_count = len(selected_categories)
-    
+
     if selected_count == 0:
         st.caption("Hiç kategori seçilmedi.")
     else:
         st.caption(f"**{selected_count} kategori seçildi**")
-    
+
     open_modal = st.button("Kategori Listesini Aç")
-    
-    # --- Modal (Popup) ---
+
     if open_modal:
         with st.modal("Kategori Seç"):
             select_all = st.checkbox(
-                "Tümünü Seç / Kaldır", 
+                "Tümünü Seç / Kaldır",
                 value=(selected_count == len(categories))
             )
-    
+
             if select_all:
                 new_selection = st.multiselect(
                     "Kategoriler",
@@ -396,13 +402,12 @@ with st.sidebar:
                     categories,
                     default=selected_categories
                 )
-    
-            apply_btn = st.button("Uygula")
-    
-            if apply_btn:
-                selected_categories = new_selection
-                st.experimental_rerun()
 
+            apply_btn = st.button("Uygula")
+
+            if apply_btn:
+                st.session_state.selected_categories = new_selection
+                st.experimental_rerun()
 
 
 
