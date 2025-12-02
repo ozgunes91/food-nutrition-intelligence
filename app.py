@@ -400,10 +400,15 @@ filtered_df = filtered_df[
 ]
 
 if focus == t("focus_high_protein", lang):
+    filtered_df = filtered_df[filtered_df["protein"] >= filtered_df["protein"].median()]
     filtered_df = filtered_df.sort_values("protein", ascending=False)
+
 elif focus == t("focus_low_carb", lang):
+    filtered_df = filtered_df[filtered_df["carbs"] <= filtered_df["carbs"].median()]
     filtered_df = filtered_df.sort_values("carbs", ascending=True)
+
 elif focus == t("focus_low_fat", lang):
+    filtered_df = filtered_df[filtered_df["fat"] <= filtered_df["fat"].median()]
     filtered_df = filtered_df.sort_values("fat", ascending=True)
 
 # =========================================================
@@ -602,7 +607,7 @@ with tab3:
         for n in nutrients:
             max_val = df[n].max()
             if max_val and not pd.isna(max_val):
-                norm_df[n] = norm_df[n] / max_val * 100
+                norm_df[n] = (norm_df[n] - df[n].min()) / (df[n].max() - df[n].min()) * 100
             else:
                 norm_df[n] = 0
 
@@ -688,24 +693,25 @@ with tab5:
         horizontal=True,
     )
 
-    smart_df = df.copy()
+    smart_df = filtered_df.copy()
 
     if mode == t("smart_high_protein", lang):
-        smart_df = smart_df[(smart_df["protein"] >= 8) & (smart_df["fat"] <= 10)].sort_values(
-            ["health_score", "protein"], ascending=[False, False]
-        )
+        smart_df["protein_density"] = smart_df["protein"] / smart_df["calories"]
+        smart_df = smart_df.dropna(subset=["protein_density"])
+        smart_df = smart_df.sort_values("protein_density", ascending=False)
+        
     elif mode == t("smart_low_calorie", lang):
-        smart_df = smart_df[smart_df["calories"] <= 120].sort_values(
-            ["health_score", "calories"], ascending=[False, True]
-        )
+        smart_df = smart_df.sort_values("calories", ascending=True)
+
     elif mode == t("smart_high_iron", lang):
-        smart_df = smart_df[smart_df["iron"] >= 2].sort_values(
-            ["health_score", "iron"], ascending=[False, False]
-        )
+        smart_df["iron_density"] = smart_df["iron"] / smart_df["calories"]
+        smart_df = smart_df.dropna(subset=["iron_density"])
+        smart_df = smart_df.sort_values("iron_density", ascending=False)
+    
     elif mode == t("smart_vitc", lang):
-        smart_df = smart_df[smart_df["vitamin_c"] >= 20].sort_values(
-            ["health_score", "vitamin_c"], ascending=[False, False]
-        )
+        smart_df["vitc_density"] = smart_df["vitamin_c"] / smart_df["calories"]
+        smart_df = smart_df.dropna(subset=["vitc_density"])
+        smart_df = smart_df.sort_values("vitc_density", ascending=False)
 
     if smart_df.empty:
         st.warning(t("no_results", lang))
