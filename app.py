@@ -3,144 +3,160 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-import os
-
-from sklearn.linear_model import Ridge
-from sklearn.model_selection import KFold
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import Pipeline
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
+from sklearn.linear_model import Ridge
+from sklearn.model_selection import cross_val_score
 from sklearn.metrics.pairwise import cosine_similarity
+import os
 
-# =========================================================
+# -------------------------
 # CONFIG
-# =========================================================
+# -------------------------
 st.set_page_config(
     page_title="Food Nutrition Intelligence",
     layout="wide",
-    initial_sidebar_state="expanded",
+    page_icon="🍏"
 )
 
-DATA_PATH = os.path.join(os.path.dirname(__file__), "Food_Nutrition_Dataset.csv")
-
-LANG_MAP = {"Türkçe": "tr", "English": "en"}
-
+# -------------------------
+# TRANSLATION LAYER
+# -------------------------
 TEXT = {
-    "app_title": {
-        "tr": "Food Nutrition Intelligence – Besin Zekâ Paneli",
-        "en": "Food Nutrition Intelligence – Nutrition Intelligence Panel",
+    "tr": {
+        "app_title": "Food Nutrition Intelligence – Besin Zekâ Paneli",
+        "sidebar_language": "Dil / Language",
+        "sidebar_theme": "Tema",
+        "sidebar_filters": "Filtreler",
+        "sidebar_category": "Kategori seç (opsiyonel)",
+        "sidebar_calorie_range": "Kalori aralığı (kcal)",
+        "sidebar_focus": "Besin odağı",
+        "focus_all": "Hepsi",
+        "focus_high_protein": "Yüksek Protein",
+        "focus_low_carb": "Düşük Karbonhidrat",
+        "focus_low_fat": "Düşük Yağ",
+        "kpi_total_foods": "Toplam Gıda",
+        "kpi_cat_count": "Kategori Sayısı",
+        "kpi_med_cal": "Medyan Kalori",
+        "kpi_best_health": "En İyi Sağlık Skoru",
+        "tab_overview": "Genel Bakış",
+        "tab_explorer": "Keşif",
+        "tab_compare": "Karşılaştır",
+        "tab_smart": "Akıllı Seçimler",
+        "tab_ml": "ML Lab",
+        "tab_reco": "Tavsiye Sistemi",
+        "tab_about": "Hakkında",
+        "overview_macro_title": "Kategori Bazlı Ortalama Makro Dağılımı",
+        "overview_scatter_title": "Kalori vs Protein",
+        "overview_cat_share": "Kategori Dağılımı",
+        "explorer_hist_title": "Besin Dağılımı",
+        "explorer_nutrient_select": "İncelenecek besin:",
+        "compare_select": "Karşılaştırmak için gıda seç (en fazla 4):",
+        "compare_radar_title": "Besin Radar Grafiği",
+        "smart_title": "Akıllı Seçimler – Bilimsel Besin Analizi",
+        "smart_mode": "Mod seç:",
+        "smart_mode_hp": "Yüksek Protein & Düşük Yağ",
+        "smart_mode_lowcal": "Düşük Kalorili",
+        "smart_mode_iron": "Demirden Zengin",
+        "smart_mode_vitc": "Vitamin C Yüksek",
+        "smart_results": "Toplam sonuç: {n}",
+        "smart_top10": "İlk 10 sonuç (bilimsel sıralı)",
+        "ml_cluster_title": "Kümeleme – K-Means + PCA",
+        "ml_cluster_slider": "Küme sayısı (K-Means)",
+        "ml_cal_title": "Kalori Tahmin Modeli (Ridge Regression)",
+        "ml_cal_explain": "Protein, karbonhidrat ve yağ değerlerinden kalori tahmini.",
+        "ml_cal_cv": "5-katlı CV R² skoru (ortalama): {score:.3f}",
+        "ml_cal_input": "Manuel giriş – makrolardan kalori tahmini",
+        "ml_protein": "Protein (g)",
+        "ml_carbs": "Karbonhidrat (g)",
+        "ml_fat": "Yağ (g)",
+        "ml_predict": "Kaloriyi Tahmin Et",
+        "reco_title": "Tavsiye Sistemi – Benzer Gıdaları Bul",
+        "reco_select": "Referans gıda seç:",
+        "reco_results": "En benzer 10 gıda",
+        "about_title": "Hakkında",
+        "about_text": (
+            "Bu dashboard, USDA FoodData Central tabanlı 200+ günlük gıdanın "
+            "besin bileşimini analiz etmek için geliştirilmiş premium bir besin zekâ aracıdır. "
+            "Filtreler, ML modeli, kümeler ve tavsiye sistemi ile gıda mühendisliği, "
+            "diyetetik ve veri bilimi perspektifini birleştirir."
+        ),
+        "no_data": "Seçilen filtrelerle eşleşen kayıt yok. Filtreleri genişletmeyi deneyin."
     },
-    "subtitle": {
-        "tr": "150+ günlük gıdanın kalori ve besin değerlerini keşfet, modelle, kümele ve öner.",
-        "en": "Explore, model, cluster and recommend using nutrition profiles of 150+ everyday foods.",
-    },
-    "sidebar_language": {"tr": "Dil / Language", "en": "Language"},
-    "sidebar_theme": {"tr": "Tema", "en": "Theme"},
-    "theme_dark": {"tr": "Karanlık", "en": "Dark"},
-    "theme_light": {"tr": "Aydınlık", "en": "Light"},
-    "sidebar_category": {"tr": "Kategoriler", "en": "Categories"},
-    "sidebar_calorie_range": {"tr": "Kalori aralığı (kcal)", "en": "Calorie range (kcal)"},
-    "sidebar_focus": {"tr": "Besin odağı", "en": "Nutrient focus"},
-    "focus_all": {"tr": "Hepsi (Genel)", "en": "All (General)"},
-    "focus_high_protein": {"tr": "Yüksek Protein", "en": "High Protein"},
-    "focus_low_carb": {"tr": "Düşük Karbonhidrat", "en": "Low Carb"},
-    "focus_low_fat": {"tr": "Düşük Yağ", "en": "Low Fat"},
-    "overview_tab": {"tr": "Genel Bakış", "en": "Overview"},
-    "explorer_tab": {"tr": "Keşif", "en": "Explorer"},
-    "compare_tab": {"tr": "Karşılaştır", "en": "Compare"},
-    "ml_tab": {"tr": "ML Lab (Tahmin + Kümeleme)", "en": "ML Lab (Prediction + Clustering)"},
-    "recommender_tab": {"tr": "Tavsiye Sistemi", "en": "Recommender"},
-    "smartpicks_tab": {"tr": "Akıllı Seçimler", "en": "Smart Picks"},
-    "kpi_total_foods": {"tr": "Toplam Gıda", "en": "Total Foods"},
-    "kpi_total_categories": {"tr": "Kategori Sayısı", "en": "Categories"},
-    "kpi_median_calories": {"tr": "Medyan Kalori", "en": "Median Calories"},
-    "kpi_top_health": {"tr": "En Yüksek Sağlık Skoru", "en": "Top Health Score"},
-    "section_category_macros": {
-        "tr": "Kategori Bazlı Ortalama Makro Dağılımı",
-        "en": "Average Macro Distribution by Category",
-    },
-    "section_calorie_protein_scatter": {
-        "tr": "Kalori vs Protein (Kategori Bazlı)",
-        "en": "Calories vs Protein (by Category)",
-    },
-    "explorer_title": {
-        "tr": "Gıda Keşfi ve Dağılım Analizi",
-        "en": "Food Explorer & Distribution",
-    },
-    "explorer_description": {
-        "tr": "Filtreleri kullanarak gıdaları incele, besin dağılımını görselleştir.",
-        "en": "Use filters to explore foods and visualize nutrient distributions.",
-    },
-    "explorer_select_nutrient": {
-        "tr": "Histogram için besin seç",
-        "en": "Select nutrient for histogram",
-    },
-    "compare_title": {"tr": "Gıda Karşılaştırma", "en": "Food Comparison"},
-    "compare_instruction": {
-        "tr": "En fazla 4 gıda seçip besin profillerini radar grafikte karşılaştır.",
-        "en": "Select up to 4 foods to compare their nutrient profiles on a radar chart.",
-    },
-    "compare_warning": {
-        "tr": "Karşılaştırma için en az 2 gıda seç.",
-        "en": "Select at least 2 foods to compare.",
-    },
-    "ml_title": {"tr": "ML Lab: Kalori Tahmini & Kümeleme", "en": "ML Lab: Calorie Prediction & Clustering"},
-    "ml_pred_title": {"tr": "Kalori Tahmini (Ridge Regression)", "en": "Calorie Prediction (Ridge Regression)"},
-    "ml_pred_desc": {
-        "tr": "Protein / Karbonhidrat / Yağ değerlerine göre kaloriyi tahmin eder. Basit, düzenlileştirilmiş (regularized) bir model kullanılır ki overfit olmasın.",
-        "en": "Predicts calories from Protein / Carbs / Fat using a simple regularized model to avoid overfitting.",
-    },
-    "ml_cluster_title": {"tr": "Gıda Kümeleme (K-Means + PCA)", "en": "Food Clustering (K-Means + PCA)"},
-    "ml_cluster_desc": {
-        "tr": "Besin profillerine göre gıdaları kümeler; PCA ile 2D 'Food Map' oluşturur.",
-        "en": "Clusters foods by nutritional profile and creates a 2D 'Food Map' using PCA.",
-    },
-    "recom_title": {"tr": "Benzer Gıda Önerileri", "en": "Similar Food Recommendations"},
-    "recom_desc": {
-        "tr": "Seçtiğin bir gıdaya besin profili olarak en çok benzeyen gıdaları listeler.",
-        "en": "Finds foods with the most similar nutrient profile to the one you select.",
-    },
-    "smartpicks_title": {"tr": "Akıllı Seçimler", "en": "Smart Picks"},
-    "smartpicks_desc": {
-        "tr": "Hazır filtreler ile hızlıca sağlıklı alternatifler bul.",
-        "en": "Use pre-defined filters to quickly find healthy options.",
-    },
-    "smartpicks_mode": {"tr": "Mod seç", "en": "Select mode"},
-    "smart_high_protein": {"tr": "Yüksek Protein & Düşük Yağ", "en": "High Protein & Low Fat"},
-    "smart_low_calorie": {"tr": "Düşük Kalorili", "en": "Low Calorie"},
-    "smart_high_iron": {"tr": "Demirden Zengin", "en": "Iron Rich"},
-    "smart_vitc": {"tr": "Vitamin C Yüksek", "en": "High Vitamin C"},
-    "table_food": {"tr": "Gıda Listesi", "en": "Food List"},
-    "health_score_label": {"tr": "Sağlık Skoru (0–100)", "en": "Health Score (0–100)"},
-    "no_results": {"tr": "Seçili filtrelere göre sonuç bulunamadı.", "en": "No results for the selected filters."},
-}
-
-NUTR_LABELS = {
-    "calories": {"tr": "Kalori (kcal)", "en": "Calories (kcal)"},
-    "protein": {"tr": "Protein (g)", "en": "Protein (g)"},
-    "carbs": {"tr": "Karbonhidrat (g)", "en": "Carbohydrates (g)"},
-    "fat": {"tr": "Yağ (g)", "en": "Fat (g)"},
-    "iron": {"tr": "Demir (mg)", "en": "Iron (mg)"},
-    "vitamin_c": {"tr": "Vitamin C (mg)", "en": "Vitamin C (mg)"},
-    "health_score": {"tr": "Sağlık Skoru", "en": "Health Score"},
+    "en": {
+        "app_title": "Food Nutrition Intelligence – Nutrition Intelligence Panel",
+        "sidebar_language": "Language / Dil",
+        "sidebar_theme": "Theme",
+        "sidebar_filters": "Filters",
+        "sidebar_category": "Select category (optional)",
+        "sidebar_calorie_range": "Calorie range (kcal)",
+        "sidebar_focus": "Nutrient focus",
+        "focus_all": "All",
+        "focus_high_protein": "High Protein",
+        "focus_low_carb": "Low Carb",
+        "focus_low_fat": "Low Fat",
+        "kpi_total_foods": "Total Foods",
+        "kpi_cat_count": "Category Count",
+        "kpi_med_cal": "Median Calories",
+        "kpi_best_health": "Best Health Score",
+        "tab_overview": "Overview",
+        "tab_explorer": "Explorer",
+        "tab_compare": "Compare",
+        "tab_smart": "Smart Picks",
+        "tab_ml": "ML Lab",
+        "tab_reco": "Recommender",
+        "tab_about": "About",
+        "overview_macro_title": "Average Macro Distribution by Category",
+        "overview_scatter_title": "Calories vs Protein",
+        "overview_cat_share": "Category Share",
+        "explorer_hist_title": "Nutrient Distribution",
+        "explorer_nutrient_select": "Select nutrient to explore:",
+        "compare_select": "Select foods to compare (up to 4):",
+        "compare_radar_title": "Nutrition Radar Chart",
+        "smart_title": "Smart Picks – Scientific Nutrition Analysis",
+        "smart_mode": "Choose mode:",
+        "smart_mode_hp": "High Protein & Low Fat",
+        "smart_mode_lowcal": "Low Calorie",
+        "smart_mode_iron": "Iron-Rich",
+        "smart_mode_vitc": "High Vitamin C",
+        "smart_results": "Total results: {n}",
+        "smart_top10": "Top 10 results (scientific ranking)",
+        "ml_cluster_title": "Clustering – K-Means + PCA",
+        "ml_cluster_slider": "Number of clusters (K-Means)",
+        "ml_cal_title": "Calorie Prediction Model (Ridge Regression)",
+        "ml_cal_explain": "Predict calories from protein, carbs and fat values.",
+        "ml_cal_cv": "5-fold CV R² score (mean): {score:.3f}",
+        "ml_cal_input": "Manual input – predict calories from macros",
+        "ml_protein": "Protein (g)",
+        "ml_carbs": "Carbs (g)",
+        "ml_fat": "Fat (g)",
+        "ml_predict": "Predict Calories",
+        "reco_title": "Recommender – Find Similar Foods",
+        "reco_select": "Select a reference food:",
+        "reco_results": "Top 10 most similar foods",
+        "about_title": "About",
+        "about_text": (
+            "This dashboard is a premium nutrition intelligence tool built on "
+            "USDA FoodData Central data for 200+ everyday foods. It combines "
+            "filters, ML models, clustering and recommenders to support "
+            "diet planning, health analysis and food-tech innovation."
+        ),
+        "no_data": "No records match the selected filters. Try relaxing your filters."
+    }
 }
 
 def t(key: str, lang: str) -> str:
-    return TEXT.get(key, {}).get(lang, key)
+    return TEXT.get(lang, TEXT["en"]).get(key, key)
 
-def nl(col: str, lang: str) -> str:
-    return NUTR_LABELS.get(col, {}).get(lang, col)
-
-# =========================================================
-# THEME / CSS (Palantir-ish)
-# =========================================================
+# -------------------------
+# THEME CSS
+# -------------------------
 def inject_css(theme: str):
     if theme == "Dark":
-        css = """
+        bg_css = """
         <style>
         body, [data-testid="stAppViewContainer"] {
-            background: radial-gradient(circle at top left,#020617 0,#0b1120 45%,#020617 100%) !important;
+            background: radial-gradient(circle at top left,#020617 0,#020617 35%,#020617 100%) !important;
             color: #e5e7eb !important;
         }
         section[data-testid="stSidebar"] {
@@ -149,630 +165,478 @@ def inject_css(theme: str):
         }
         .kpi-card {
             background: rgba(15,23,42,0.96);
+            border-radius: 1.5rem;
             border: 1px solid #1e293b;
-            border-radius: 1rem;
-            padding: 1rem 1.25rem;
             box-shadow: 0 18px 40px rgba(15,23,42,0.85);
-            color:#e5e7eb;
-        }
-        .kpi-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color:#9ca3af;
-        }
-        .kpi-value {
-            font-size: 1.6rem;
-            font-weight: 700;
-        }
-        .kpi-sub {
-            font-size: 0.8rem;
-            color:#6b7280;
+            padding: 1rem 1.2rem;
         }
         </style>
         """
     else:
-        css = """
+        bg_css = """
         <style>
         body, [data-testid="stAppViewContainer"] {
             background: linear-gradient(to bottom,#f9fafb,#e5e7eb) !important;
             color: #111827 !important;
         }
         section[data-testid="stSidebar"] {
-            background: linear-gradient(to bottom,#f9fafb,#e5e7eb) !important;
+            background: #ffffff !important;
             color:#111827 !important;
         }
         .kpi-card {
-            background: rgba(255,255,255,0.96);
+            background: #ffffff;
+            border-radius: 1.5rem;
             border: 1px solid #e5e7eb;
-            border-radius: 1rem;
-            padding: 1rem 1.25rem;
-            box-shadow: 0 14px 30px rgba(148,163,184,0.35);
-            color:#111827;
-        }
-        .kpi-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color:#6b7280;
-        }
-        .kpi-value {
-            font-size: 1.6rem;
-            font-weight: 700;
-        }
-        .kpi-sub {
-            font-size: 0.8rem;
-            color:#9ca3af;
+            box-shadow: 0 10px 30px rgba(15,23,42,0.08);
+            padding: 1rem 1.2rem;
         }
         </style>
         """
-    st.markdown(css, unsafe_allow_html=True)
+    st.markdown(bg_css, unsafe_allow_html=True)
 
-# =========================================================
-# DATA & HEALTH SCORE
-# =========================================================
+# -------------------------
+# LOAD DATA
+# -------------------------
 @st.cache_data
 def load_data():
-    df = pd.read_csv(DATA_PATH)
-    # basit sağlık skoru (domain mantığına dayalı, pure ML değil)
-    def health_score(row):
-        score = 50
+    data_path = os.path.join(os.path.dirname(__file__), "Food_Nutrition_Dataset.csv")
+    df = pd.read_csv(data_path)
+    df.columns = df.columns.str.lower().str.strip()
 
-        # Kalori: çok yüksek kalori cezalı, düşük/orta ödüllü
-        c = row["calories"]
-        if c <= 100:
-            score += 15
-        elif c <= 200:
-            score += 8
-        elif c >= 350:
-            score -= 10
+    # basic cleaning
+    num_cols = ["calories", "protein", "carbs", "fat", "iron", "vitamin_c"]
+    df[num_cols] = df[num_cols].fillna(0)
 
-        # Protein: yüksek protein ödüllü
-        p = row["protein"]
-        if p >= 15:
-            score += 18
-        elif p >= 8:
-            score += 10
-        elif p >= 4:
-            score += 5
+    # health score
+    df["health_score"] = (
+        df["protein"] * 1.5
+        + df["vitamin_c"] * 1.2
+        + df["iron"] * 1.1
+        - df["fat"] * 0.8
+        - df["calories"] * 0.05
+    )
 
-        # Yağ: çok yağlılar cezalı
-        f = row["fat"]
-        if f >= 20:
-            score -= 15
-        elif f >= 10:
-            score -= 7
+    # densities (per calorie) – scientific enrichment
+    safe_cal = df["calories"].replace(0, np.nan)
+    df["protein_density"] = df["protein"] / safe_cal
+    df["iron_density"] = df["iron"] / safe_cal
+    df["vitc_density"] = df["vitamin_c"] / safe_cal
 
-        # Vitamin C: bağışıklık artı puan
-        vitc = 0 if pd.isna(row.get("vitamin_c", 0)) else row.get("vitamin_c", 0)
-        if vitc >= 30:
-            score += 10
-        elif vitc >= 10:
-            score += 6
+    # normalized features for radar
+    for col in ["calories", "protein", "carbs", "fat", "iron", "vitamin_c", "health_score"]:
+        df[f"{col}_norm"] = (df[col] - df[col].min()) / (df[col].max() - df[col].min() + 1e-9)
 
-        # Demir: anemiye karşı artı puan
-        iron = 0 if pd.isna(row.get("iron", 0)) else row.get("iron", 0)
-        if iron >= 3:
-            score += 6
-        elif iron >= 1.5:
-            score += 3
-
-        return max(0, min(100, score))
-
-    df["health_score"] = df.apply(health_score, axis=1)
     return df
 
 df = load_data()
 
-# =========================================================
-# ML – CALORIE PREDICTION (RIDGE + CV)
-# =========================================================
-@st.cache_resource
-def train_calorie_model(data: pd.DataFrame):
-    X = data[["protein", "carbs", "fat"]].values
-    y = data["calories"].values
-
-    alphas = [0.1, 1.0, 10.0]
-    best_alpha = alphas[0]
-    best_score = -np.inf
-    cv_scores = []
-
-    for a in alphas:
-        pipe = Pipeline(
-            [
-                ("scaler", StandardScaler()),
-                ("model", Ridge(alpha=a)),
-            ]
-        )
-        kf = KFold(n_splits=5, shuffle=True, random_state=42)
-        scores = []
-        for train_idx, val_idx in kf.split(X):
-            pipe.fit(X[train_idx], y[train_idx])
-            scores.append(pipe.score(X[val_idx], y[val_idx]))  # R^2
-        mean_r2 = np.mean(scores)
-        cv_scores.append((a, mean_r2))
-        if mean_r2 > best_score:
-            best_score = mean_r2
-            best_alpha = a
-
-    # En iyi alpha ile final modeli tüm veride eğit
-    best_model = Pipeline(
-        [
-            ("scaler", StandardScaler()),
-            ("model", Ridge(alpha=best_alpha)),
-        ]
-    )
-    best_model.fit(X, y)
-
-    return best_model, cv_scores, best_alpha, best_score
-
-cal_model, cv_scores, best_alpha, best_cv = train_calorie_model(df)
-
-# =========================================================
-# CLUSTERING – KMEANS + PCA
-# =========================================================
-def compute_clusters(data: pd.DataFrame, n_clusters: int):
-    feats = data[["calories", "protein", "carbs", "fat", "iron", "vitamin_c"]].fillna(0)
-    kmeans = KMeans(n_clusters=n_clusters, n_init=10, random_state=42)
-    clusters = kmeans.fit_predict(feats)
-
-    pca = PCA(n_components=2, random_state=42)
-    pcs = pca.fit_transform(feats)
-
-    result = data.copy()
-    result["cluster"] = clusters
-    result["pc1"] = pcs[:, 0]
-    result["pc2"] = pcs[:, 1]
-
-    explained = pca.explained_variance_ratio_.sum()
-    return result, explained
-
-# =========================================================
-# SIMILARITY – RECOMMENDER
-# =========================================================
-@st.cache_resource
-def build_similarity_matrix(data: pd.DataFrame):
-    feats = data[["calories", "protein", "carbs", "fat", "iron", "vitamin_c"]].fillna(0)
-    sim = cosine_similarity(feats)
-    return sim
-
-sim_matrix = build_similarity_matrix(df)
-
-# =========================================================
-# SIDEBAR
-# =========================================================
+# -------------------------
+# SIDEBAR – LANGUAGE & THEME
+# -------------------------
 with st.sidebar:
-    st.markdown("### 🧭 Control Panel")
+    lang = st.radio("Dil / Language", ["tr", "en"], index=0, format_func=lambda x: "Türkçe" if x=="tr" else "English")
+    theme = st.radio(t("sidebar_theme", lang), ["Dark", "Light"], index=0)
 
-    lang_choice = st.radio(
-        "Language",
-        options=list(LANG_MAP.keys()),
-        index=0,
-    )
-    lang = LANG_MAP[lang_choice]
+inject_css(theme)
 
-    theme_choice = st.radio(
-        label=t("sidebar_theme", lang),
-        options=[t("theme_dark", lang), t("theme_light", lang)],
-        index=0,
-    )
-    theme = "Dark" if theme_choice == t("theme_dark", lang) else "Light"
-    inject_css(theme)
+st.title(t("app_title", lang))
 
-    st.markdown("---")
+# -------------------------
+# SIDEBAR – FILTERS
+# -------------------------
+st.sidebar.markdown(f"### {t('sidebar_filters', lang)}")
 
-    categories = sorted(df["category"].dropna().unique().tolist())
-    selected_categories = st.multiselect(
-        t("sidebar_category", lang),
-        options=categories,
-        default=categories,
-    )
-
-    min_cal, max_cal = int(df["calories"].min()), int(df["calories"].max())
-    calorie_range = st.slider(
-        t("sidebar_calorie_range", lang),
-        min_value=min_cal,
-        max_value=max_cal,
-        value=(min_cal, max_cal),
-        step=10,
-    )
-
-    focus = st.radio(
-        t("sidebar_focus", lang),
-        options=[
-            t("focus_all", lang),
-            t("focus_high_protein", lang),
-            t("focus_low_carb", lang),
-            t("focus_low_fat", lang),
-        ],
-    )
-
-    cluster_k = st.slider(
-        "K-Means clusters (ML Lab)",
-        min_value=2,
-        max_value=8,
-        value=4,
-    )
-
-filtered_df = df.copy()
-filtered_df = filtered_df[
-    (filtered_df["category"].isin(selected_categories))
-    & (filtered_df["calories"].between(calorie_range[0], calorie_range[1]))
-]
-
-if focus == t("focus_high_protein", lang):
-    filtered_df = filtered_df.sort_values("protein", ascending=False)
-elif focus == t("focus_low_carb", lang):
-    filtered_df = filtered_df.sort_values("carbs", ascending=True)
-elif focus == t("focus_low_fat", lang):
-    filtered_df = filtered_df.sort_values("fat", ascending=True)
-
-# =========================================================
-# HEADER
-# =========================================================
-st.markdown(f"## {t('app_title', lang)}")
-st.markdown(t("subtitle", lang))
-st.markdown("")
-
-# Tabs
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
-    [
-        f"📊 {t('overview_tab', lang)}",
-        f"🔍 {t('explorer_tab', lang)}",
-        f"⚖️ {t('compare_tab', lang)}",
-        f"🧪 {t('ml_tab', lang)}",
-        f"✨ {t('smartpicks_tab', lang)}",
-        f"🤝 {t('recommender_tab', lang)}",
-    ]
+categories = sorted(df["category"].unique())
+selected_categories = st.sidebar.multiselect(
+    t("sidebar_category", lang),
+    options=categories,
+    default=[]
 )
 
-# =========================================================
-# TAB 1 – OVERVIEW
-# =========================================================
-with tab1:
-    if filtered_df.empty:
-        st.warning(t("no_results", lang))
-    else:
-        c1, c2, c3, c4 = st.columns(4)
+cal_min = int(df["calories"].min())
+cal_max = int(df["calories"].max())
+cal_range = st.sidebar.slider(
+    t("sidebar_calorie_range", lang),
+    min_value=cal_min,
+    max_value=cal_max,
+    value=(cal_min, cal_max)
+)
 
-        total_foods = len(filtered_df)
-        total_categories = filtered_df["category"].nunique()
-        median_cal = int(filtered_df["calories"].median())
-        top_health_row = filtered_df.sort_values("health_score", ascending=False).iloc[0]
-        top_health_score = int(top_health_row["health_score"])
-        top_health_food = top_health_row["food_name"]
+focus_options_tr = {
+    "Hepsi": "all",
+    "Yüksek Protein": "high_protein",
+    "Düşük Karbonhidrat": "low_carb",
+    "Düşük Yağ": "low_fat",
+}
+focus_options_en = {
+    "All": "all",
+    "High Protein": "high_protein",
+    "Low Carb": "low_carb",
+    "Low Fat": "low_fat",
+}
+if lang == "tr":
+    focus_label_map = focus_options_tr
+else:
+    focus_label_map = focus_options_en
 
-        with c1:
-            st.markdown(
-                f"""
-                <div class="kpi-card">
-                  <div class="kpi-label">{t('kpi_total_foods', lang)}</div>
-                  <div class="kpi-value">{total_foods}</div>
-                  <div class="kpi-sub">{t('table_food', lang)}</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-        with c2:
-            st.markdown(
-                f"""
-                <div class="kpi-card">
-                  <div class="kpi-label">{t('kpi_total_categories', lang)}</div>
-                  <div class="kpi-value">{total_categories}</div>
-                  <div class="kpi-sub">unique</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-        with c3:
-            st.markdown(
-                f"""
-                <div class="kpi-card">
-                  <div class="kpi-label">{t('kpi_median_calories', lang)}</div>
-                  <div class="kpi-value">{median_cal}</div>
-                  <div class="kpi-sub">{nl('calories', lang)}</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-        with c4:
-            st.markdown(
-                f"""
-                <div class="kpi-card">
-                  <div class="kpi-label">{t('kpi_top_health', lang)}</div>
-                  <div class="kpi-value">{top_health_score}</div>
-                  <div class="kpi-sub">{top_health_food}</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+focus_label = st.sidebar.radio(
+    t("sidebar_focus", lang),
+    list(focus_label_map.keys()),
+    index=0
+)
+focus_mode = focus_label_map[focus_label]
 
-        st.markdown("")
+# -------------------------
+# APPLY FILTERS
+# -------------------------
+filtered_df = df.copy()
 
-        st.markdown(f"#### {t('section_category_macros', lang)}")
-        cat_macro = (
-            filtered_df.groupby("category")[["protein", "carbs", "fat"]]
-            .mean()
-            .reset_index()
-        )
-        cat_macro_melt = cat_macro.melt(
-            id_vars="category",
-            value_vars=["protein", "carbs", "fat"],
-            var_name="nutrient",
-            value_name="value",
-        )
+if selected_categories:
+    filtered_df = filtered_df[filtered_df["category"].isin(selected_categories)]
 
-        fig_macro = px.bar(
-            cat_macro_melt,
-            x="category",
-            y="value",
-            color="nutrient",
-            barmode="group",
-            labels={"category": "Category", "value": "Avg (g)", "nutrient": "Nutrient"},
-        )
-        fig_macro.update_layout(legend_title_text="Nutrient")
-        st.plotly_chart(fig_macro, use_container_width=True)
+filtered_df = filtered_df[
+    (filtered_df["calories"] >= cal_range[0]) &
+    (filtered_df["calories"] <= cal_range[1])
+]
 
-        st.markdown("")
-        st.markdown(f"#### {t('section_calorie_protein_scatter', lang)}")
-        fig_scatter = px.scatter(
+if focus_mode == "high_protein":
+    filtered_df = filtered_df[filtered_df["protein"] >= filtered_df["protein"].median()]
+elif focus_mode == "low_carb":
+    filtered_df = filtered_df[filtered_df["carbs"] <= filtered_df["carbs"].median()]
+elif focus_mode == "low_fat":
+    filtered_df = filtered_df[filtered_df["fat"] <= filtered_df["fat"].median()]
+
+if filtered_df.empty:
+    st.warning(t("no_data", lang))
+    st.stop()
+
+# -------------------------
+# KPI CARDS – FILTER-RESPONSIVE
+# -------------------------
+k1, k2, k3, k4 = st.columns(4)
+
+with k1:
+    st.markdown('<div class="kpi-card">', unsafe_allow_html=True)
+    st.metric(t("kpi_total_foods", lang), len(filtered_df))
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with k2:
+    st.markdown('<div class="kpi-card">', unsafe_allow_html=True)
+    st.metric(t("kpi_cat_count", lang), filtered_df["category"].nunique())
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with k3:
+    st.markdown('<div class="kpi-card">', unsafe_allow_html=True)
+    st.metric(t("kpi_med_cal", lang), int(filtered_df["calories"].median()))
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with k4:
+    st.markdown('<div class="kpi-card">', unsafe_allow_html=True)
+    best_idx = filtered_df["health_score"].idxmax()
+    best_food = filtered_df.loc[best_idx, "food_name"]
+    st.metric(t("kpi_best_health", lang), best_food)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+st.markdown("---")
+
+# -------------------------
+# TABS
+# -------------------------
+tab_overview, tab_explorer, tab_compare, tab_smart, tab_ml, tab_reco, tab_about = st.tabs([
+    t("tab_overview", lang),
+    t("tab_explorer", lang),
+    t("tab_compare", lang),
+    t("tab_smart", lang),
+    t("tab_ml", lang),
+    t("tab_reco", lang),
+    t("tab_about", lang),
+])
+
+# -------------------------
+# OVERVIEW TAB
+# -------------------------
+with tab_overview:
+    st.subheader(t("overview_macro_title", lang))
+
+    macro = (
+        filtered_df
+        .groupby("category")[["protein", "carbs", "fat"]]
+        .mean()
+        .reset_index()
+        .sort_values("protein", ascending=False)
+    )
+
+    fig_macro = px.bar(
+        macro,
+        x="category",
+        y=["protein", "carbs", "fat"],
+        barmode="group",
+        template="plotly_white",
+    )
+    fig_macro.update_layout(legend_orientation="h", legend_yanchor="bottom", legend_y=1.02)
+    st.plotly_chart(fig_macro, use_container_width=True)
+
+    c1, c2 = st.columns(2)
+    with c1:
+        st.subheader(t("overview_scatter_title", lang))
+        fig_sc = px.scatter(
             filtered_df,
             x="calories",
             y="protein",
             color="category",
-            hover_data=["food_name", "carbs", "fat", "health_score"],
-            labels={
-                "calories": nl("calories", lang),
-                "protein": nl("protein", lang),
-            },
+            hover_name="food_name",
+            size="health_score",
         )
-        st.plotly_chart(fig_scatter, use_container_width=True)
+        st.plotly_chart(fig_sc, use_container_width=True)
+    with c2:
+        st.subheader(t("overview_cat_share", lang))
+        cat_counts = filtered_df["category"].value_counts().reset_index()
+        cat_counts.columns = ["category", "count"]
+        fig_pie = px.pie(cat_counts, names="category", values="count")
+        st.plotly_chart(fig_pie, use_container_width=True)
 
-# =========================================================
-# TAB 2 – EXPLORER
-# =========================================================
-with tab2:
-    st.markdown(f"### {t('explorer_title', lang)}")
-    st.markdown(t("explorer_description", lang))
+# -------------------------
+# EXPLORER TAB
+# -------------------------
+with tab_explorer:
+    st.subheader(t("tab_explorer", lang))
 
-    if filtered_df.empty:
-        st.warning(t("no_results", lang))
-    else:
-        nut_choice = st.selectbox(
-            t("explorer_select_nutrient", lang),
-            options=["calories", "protein", "carbs", "fat", "iron", "vitamin_c", "health_score"],
-            format_func=lambda x: nl(x, lang),
+    nutr_options = ["calories", "protein", "carbs", "fat", "iron", "vitamin_c"]
+    nutr_labels = {
+        "calories": "Calories",
+        "protein": "Protein (g)",
+        "carbs": "Carbs (g)",
+        "fat": "Fat (g)",
+        "iron": "Iron (mg)",
+        "vitamin_c": "Vitamin C (mg)",
+    }
+    nutr_choice = st.selectbox(
+        t("explorer_nutrient_select", lang),
+        nutr_options,
+        format_func=lambda x: nutr_labels[x]
+    )
+
+    e1, e2 = st.columns(2)
+
+    with e1:
+        fig_hist = px.histogram(
+            filtered_df,
+            x=nutr_choice,
+            nbins=20,
+            color="category",
         )
+        fig_hist.update_layout(title=t("explorer_hist_title", lang))
+        st.plotly_chart(fig_hist, use_container_width=True)
 
-        cA, cB = st.columns((2, 3))
+    with e2:
+        fig_box = px.box(
+            filtered_df,
+            x="category",
+            y=nutr_choice,
+        )
+        st.plotly_chart(fig_box, use_container_width=True)
 
-        with cA:
-            st.markdown(f"#### {t('table_food', lang)}")
-            show_cols = [
-                "food_name",
-                "category",
-                "calories",
-                "protein",
-                "carbs",
-                "fat",
-                "iron",
-                "vitamin_c",
-                "health_score",
-            ]
-            st.dataframe(
-                filtered_df[show_cols].reset_index(drop=True),
-                use_container_width=True,
-                height=500,
-            )
+    st.markdown("### Data")
+    st.dataframe(
+        filtered_df[
+            ["food_name", "category", "calories", "protein", "carbs", "fat", "iron", "vitamin_c", "health_score"]
+        ].sort_values("health_score", ascending=False),
+        use_container_width=True,
+        height=400
+    )
 
-        with cB:
-            st.markdown(f"#### {nl(nut_choice, lang)}")
-            fig_hist = px.histogram(
-                filtered_df,
-                x=nut_choice,
-                nbins=25,
-                color="category",
-                marginal="box",
-                labels={nut_choice: nl(nut_choice, lang)},
-            )
-            st.plotly_chart(fig_hist, use_container_width=True)
+# -------------------------
+# COMPARE TAB – RADAR CHART
+# -------------------------
+with tab_compare:
+    st.subheader(t("compare_radar_title", lang))
 
-# =========================================================
-# TAB 3 – COMPARE
-# =========================================================
-with tab3:
-    st.markdown(f"### {t('compare_title', lang)}")
-    st.markdown(t("compare_instruction", lang))
-
-    all_foods = df["food_name"].tolist()
-    selected_foods = st.multiselect(
-        "Foods",
-        options=all_foods,
-        default=all_foods[:3],
+    compare_foods = st.multiselect(
+        t("compare_select", lang),
+        options=sorted(df["food_name"].unique()),
         max_selections=4,
     )
 
-    if len(selected_foods) < 2:
-        st.info(t("compare_warning", lang))
-    else:
-        cmp_df = df[df["food_name"].isin(selected_foods)].copy()
-        nutrients = ["calories", "protein", "carbs", "fat", "iron", "vitamin_c", "health_score"]
-
-        # normalize 0-100 for radar
-        norm_df = cmp_df.copy()
-        for n in nutrients:
-            max_val = df[n].max()
-            if max_val and not pd.isna(max_val):
-                norm_df[n] = norm_df[n] / max_val * 100
-            else:
-                norm_df[n] = 0
+    if compare_foods:
+        radar_cols = ["calories_norm", "protein_norm", "carbs_norm", "fat_norm", "iron_norm", "vitamin_c_norm", "health_score_norm"]
+        radar_labels = ["Calories", "Protein", "Carbs", "Fat", "Iron", "Vitamin C", "Health Score"]
+        rad_df = df[df["food_name"].isin(compare_foods)].reset_index(drop=True)
 
         fig_radar = go.Figure()
-        for _, row in norm_df.iterrows():
-            fig_radar.add_trace(
-                go.Scatterpolar(
-                    r=[row[n] for n in nutrients],
-                    theta=[nl(n, lang) for n in nutrients],
-                    fill="toself",
-                    name=row["food_name"],
-                )
-            )
-        fig_radar.update_layout(
-            polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
-            showlegend=True,
-        )
+        for _, row in rad_df.iterrows():
+            fig_radar.add_trace(go.Scatterpolar(
+                r=[row[c] for c in radar_cols],
+                theta=radar_labels,
+                fill="toself",
+                name=row["food_name"]
+            ))
+        fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 1])), showlegend=True)
         st.plotly_chart(fig_radar, use_container_width=True)
 
-        st.markdown("#### Detail")
         st.dataframe(
-            cmp_df[["food_name"] + nutrients].reset_index(drop=True),
-            use_container_width=True,
+            rad_df[
+                ["food_name", "category", "calories", "protein", "carbs", "fat", "iron", "vitamin_c", "health_score"]
+            ],
+            use_container_width=True
         )
 
-# =========================================================
-# TAB 4 – ML LAB (PREDICTION + CLUSTERING)
-# =========================================================
-with tab4:
-    st.markdown(f"### {t('ml_title', lang)}")
+# -------------------------
+# SMART PICKS – SCIENTIFIC
+# -------------------------
+with tab_smart:
+    st.subheader(t("smart_title", lang))
 
-    cL, cR = st.columns(2)
+    smart_modes = [
+        t("smart_mode_hp", lang),
+        t("smart_mode_lowcal", lang),
+        t("smart_mode_iron", lang),
+        t("smart_mode_vitc", lang),
+    ]
 
-    # ---- Prediction
-    with cL:
-        st.markdown(f"#### {t('ml_pred_title', lang)}")
-        st.caption(t("ml_pred_desc", lang))
+    smart_choice = st.radio(t("smart_mode", lang), smart_modes, horizontal=True)
 
-        st.write(f"Best alpha: **{best_alpha}**, CV mean R²: **{best_cv:.3f}**")
+    f = df.copy()
+    score_col = None
+    title_metric = ""
 
-        p = st.number_input(nl("protein", lang), 0.0, 100.0, 10.0, step=1.0)
-        c = st.number_input(nl("carbs", lang), 0.0, 150.0, 10.0, step=1.0)
-        f = st.number_input(nl("fat", lang), 0.0, 100.0, 5.0, step=1.0)
+    if smart_choice == t("smart_mode_hp", lang):
+        # High protein & low fat → protein density
+        f = f[(f["protein"] > f["protein"].median()) & (f["fat"] < f["fat"].median())]
+        f = f.assign(score=f["protein_density"])
+        f = f.dropna(subset=["score"]).sort_values("score", ascending=False)
+        score_col = "score"
+        title_metric = "protein_density"
 
-        if st.button("Predict Calories", key="pred_button"):
-            pred = cal_model.predict(np.array([[p, c, f]]))[0]
-            st.success(f"Estimated Calories: **{pred:.1f} kcal**")
+    elif smart_choice == t("smart_mode_lowcal", lang):
+        f = f[f["calories"] < f["calories"].median()]
+        f = f.assign(score=-f["calories"]).sort_values("calories")  # lower is better
+        score_col = "score"
+        title_metric = "calories"
 
-    # ---- Clustering
-    with cR:
-        st.markdown(f"#### {t('ml_cluster_title', lang)}")
-        st.caption(t("ml_cluster_desc", lang))
+    elif smart_choice == t("smart_mode_iron", lang):
+        f = f[f["iron"] > f["iron"].median()]
+        f = f.assign(score=f["iron_density"])
+        f = f.dropna(subset=["score"]).sort_values("score", ascending=False)
+        score_col = "score"
+        title_metric = "iron_density"
 
-        clustered_df, explained = compute_clusters(df, cluster_k)
-        st.write(f"PCA variance explained: **{explained*100:.1f}%**")
+    elif smart_choice == t("smart_mode_vitc", lang):
+        f = f[f["vitamin_c"] > f["vitamin_c"].median()]
+        f = f.assign(score=f["vitc_density"])
+        f = f.dropna(subset=["score"]).sort_values("score", ascending=False)
+        score_col = "score"
+        title_metric = "vitc_density"
 
-        fig_cluster = px.scatter(
-            clustered_df,
-            x="pc1",
-            y="pc2",
-            color="cluster",
-            hover_name="food_name",
-            hover_data=["category", "calories", "protein", "carbs", "fat"],
-            title="Food Nutrition Map (PCA + K-Means)",
+    st.write(t("smart_results", lang).format(n=len(f)))
+
+    top10 = f.head(10).copy()
+    st.markdown(f"**{t('smart_top10', lang)}**")
+
+    display_cols = ["food_name", "category", "calories", "protein", "carbs", "fat", "iron", "vitamin_c", "health_score"]
+    if score_col is not None:
+        display_cols.append(score_col)
+
+    st.dataframe(top10[display_cols], use_container_width=True)
+
+    if score_col is not None and not top10.empty:
+        fig_top = px.bar(
+            top10,
+            x="food_name",
+            y=score_col,
+            title=title_metric,
         )
-        st.plotly_chart(fig_cluster, use_container_width=True)
+        st.plotly_chart(fig_top, use_container_width=True)
 
-# =========================================================
-# TAB 5 – SMART PICKS
-# =========================================================
-with tab5:
-    st.markdown(f"### {t('smartpicks_title', lang)}")
-    st.markdown(t("smartpicks_desc", lang))
+# -------------------------
+# ML LAB – CLUSTERING + CALORIE MODEL
+# -------------------------
+with tab_ml:
+    st.subheader(t("ml_cluster_title", lang))
 
-    mode = st.radio(
-        t("smartpicks_mode", lang),
-        options=[
-            t("smart_high_protein", lang),
-            t("smart_low_calorie", lang),
-            t("smart_high_iron", lang),
-            t("smart_vitc", lang),
-        ],
-        horizontal=True,
+    # clustering on full df (better structure)
+    X = df[["protein", "carbs", "fat", "calories"]].values
+    n_clusters = st.slider(t("ml_cluster_slider", lang), 2, 8, 4)
+    kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
+    clusters = kmeans.fit_predict(X)
+
+    pca = PCA(n_components=2, random_state=42)
+    X_pca = pca.fit_transform(X)
+
+    clust_df = df.copy()
+    clust_df["cluster"] = clusters
+    clust_df["pca1"] = X_pca[:, 0]
+    clust_df["pca2"] = X_pca[:, 1]
+
+    fig_cl = px.scatter(
+        clust_df,
+        x="pca1",
+        y="pca2",
+        color="cluster",
+        hover_name="food_name",
+        hover_data=["category", "calories", "protein", "carbs", "fat"],
+    )
+    st.plotly_chart(fig_cl, use_container_width=True)
+
+    st.markdown("---")
+    st.subheader(t("ml_cal_title", lang))
+    st.caption(t("ml_cal_explain", lang))
+
+    # calorie model – Ridge regression
+    X_cal = df[["protein", "carbs", "fat"]]
+    y_cal = df["calories"]
+
+    model = Ridge(alpha=1.0, random_state=42)
+    scores = cross_val_score(model, X_cal, y_cal, cv=5, scoring="r2")
+    st.write(t("ml_cal_cv", lang).format(score=scores.mean()))
+
+    model.fit(X_cal, y_cal)
+
+    st.markdown(f"**{t('ml_cal_input', lang)}**")
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        p_val = st.number_input(t("ml_protein", lang), min_value=0.0, max_value=200.0, value=20.0, step=1.0)
+    with c2:
+        c_val = st.number_input(t("ml_carbs", lang), min_value=0.0, max_value=300.0, value=30.0, step=1.0)
+    with c3:
+        f_val = st.number_input(t("ml_fat", lang), min_value=0.0, max_value=150.0, value=10.0, step=1.0)
+
+    if st.button(t("ml_predict", lang)):
+        pred = model.predict([[p_val, c_val, f_val]])[0]
+        st.success(f"≈ {pred:.1f} kcal")
+
+# -------------------------
+# RECOMMENDER TAB
+# -------------------------
+with tab_reco:
+    st.subheader(t("reco_title", lang))
+
+    food_sel = st.selectbox(
+        t("reco_select", lang),
+        options=sorted(df["food_name"].unique())
     )
 
-    smart_df = df.copy()
+    if food_sel:
+        feat_cols = ["calories", "protein", "carbs", "fat", "iron", "vitamin_c"]
+        mat = df[feat_cols].values
+        sim = cosine_similarity(mat)
+        sim_df = pd.DataFrame(sim, index=df["food_name"], columns=df["food_name"])
 
-    if mode == t("smart_high_protein", lang):
-        smart_df = smart_df[(smart_df["protein"] >= 8) & (smart_df["fat"] <= 10)].sort_values(
-            ["health_score", "protein"], ascending=[False, False]
-        )
-    elif mode == t("smart_low_calorie", lang):
-        smart_df = smart_df[smart_df["calories"] <= 120].sort_values(
-            ["health_score", "calories"], ascending=[False, True]
-        )
-    elif mode == t("smart_high_iron", lang):
-        smart_df = smart_df[smart_df["iron"] >= 2].sort_values(
-            ["health_score", "iron"], ascending=[False, False]
-        )
-    elif mode == t("smart_vitc", lang):
-        smart_df = smart_df[smart_df["vitamin_c"] >= 20].sort_values(
-            ["health_score", "vitamin_c"], ascending=[False, False]
+        res = (
+            sim_df[food_sel]
+            .sort_values(ascending=False)
+            .iloc[1:11]
+            .reset_index()
+            .rename(columns={"index": "food_name", food_sel: "similarity"})
         )
 
-    if smart_df.empty:
-        st.warning(t("no_results", lang))
-    else:
-        st.write(f"Found **{len(smart_df)}** items.")
-        st.dataframe(
-            smart_df[
-                [
-                    "food_name",
-                    "category",
-                    "calories",
-                    "protein",
-                    "carbs",
-                    "fat",
-                    "iron",
-                    "vitamin_c",
-                    "health_score",
-                ]
-            ].reset_index(drop=True),
-            use_container_width=True,
-        )
+        st.markdown(f"**{t('reco_results', lang)}**")
+        st.dataframe(res, use_container_width=True)
 
-# =========================================================
-# TAB 6 – RECOMMENDER
-# =========================================================
-with tab6:
-    st.markdown(f"### {t('recom_title', lang)}")
-    st.markdown(t("recom_desc", lang))
-
-    food_list = df["food_name"].tolist()
-    base_food = st.selectbox("Food", options=food_list)
-
-    top_n = st.slider("How many similar foods?", min_value=3, max_value=15, value=8)
-
-    if st.button("Find Similar Foods", key="recom_button"):
-        idx = df[df["food_name"] == base_food].index[0]
-        sims = sim_matrix[idx]
-
-        temp = df.copy()
-        temp["similarity"] = sims
-        # kendisini hariç tut
-        temp = temp[temp["food_name"] != base_food]
-        result = temp.sort_values("similarity", ascending=False).head(top_n)
-
-        st.dataframe(
-            result[
-                [
-                    "food_name",
-                    "category",
-                    "calories",
-                    "protein",
-                    "carbs",
-                    "fat",
-                    "iron",
-                    "vitamin_c",
-                    "health_score",
-                    "similarity",
-                ]
-            ].reset_index(drop=True),
-            use_container_width=True,
-        )
-
-        fig_bar = px.bar(
-            result,
-            x="food_name",
-            y="similarity",
-            title="Most Similar Foods (Cosine Similarity)",
-        )
-        st.plotly_chart(fig_bar, use_container_width=True)
+# -------------------------
+# ABOUT TAB
+# -------------------------
+with tab_about:
+    st.subheader(t("about_title", lang))
+    st.write(t("about_text", lang))
+    st.markdown("---")
+    st.write(f"Rows: {len(df)}, Columns: {len(df.columns)}")
