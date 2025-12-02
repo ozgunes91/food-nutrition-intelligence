@@ -360,12 +360,27 @@ with st.sidebar:
 
     st.markdown("---")
 
-    categories = sorted(df["category"].dropna().unique().tolist())
-    selected_categories = st.multiselect(
-        t("sidebar_category", lang),
-        options=categories,
-        default=categories,
-    )
+    # --- KATEGORİ FİLTRESİ (yeni UX versiyonu) ---
+    st.markdown(f"### {t('sidebar_category', lang)}")
+
+    select_all = st.checkbox("Tümünü Seç / Kaldır")
+
+    categories = sorted(df["category"].unique())
+
+    if select_all:
+        selected_categories = st.multiselect(
+            "",
+            options=categories,
+            default=categories
+        )
+    else:
+        selected_categories = st.multiselect(
+            "",
+            options=categories,
+            default=[]
+        )
+
+
 
     min_cal, max_cal = int(df["calories"].min()), int(df["calories"].max())
     calorie_range = st.slider(
