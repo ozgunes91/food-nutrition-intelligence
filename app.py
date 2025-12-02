@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
+import os
 
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import KFold
@@ -21,7 +22,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-DATA_PATH = "/kaggle/input/food-nutrition-dataset-150-everyday-foods/Food_Nutrition_Dataset.csv"
+DATA_PATH = os.path.join(os.path.dirname(__file__), "Food_Nutrition_Dataset.csv")
 
 LANG_MAP = {"Türkçe": "tr", "English": "en"}
 
