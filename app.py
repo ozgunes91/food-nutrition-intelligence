@@ -359,26 +359,50 @@ with st.sidebar:
     inject_css(theme)
 
     st.markdown("---")
-
-    # --- KATEGORİ FİLTRESİ (yeni UX versiyonu) ---
-    st.markdown(f"### {t('sidebar_category', lang)}")
-
-    select_all = st.checkbox("Tümünü Seç / Kaldır")
-
+    
+        # --- KATEGORİ MODAL FİLTRE ---
+    
     categories = sorted(df["category"].unique())
-
-    if select_all:
-        selected_categories = st.multiselect(
-            "",
-            options=categories,
-            default=categories
-        )
+    
+    st.markdown("### Kategoriler")
+    
+    # seçili kategori sayısı
+    selected_count = len(selected_categories)
+    
+    if selected_count == 0:
+        st.caption("Hiç kategori seçilmedi.")
     else:
-        selected_categories = st.multiselect(
-            "",
-            options=categories,
-            default=[]
-        )
+        st.caption(f"**{selected_count} kategori seçildi**")
+    
+    open_modal = st.button("Kategori Listesini Aç")
+    
+    # --- Modal (Popup) ---
+    if open_modal:
+        with st.modal("Kategori Seç"):
+            select_all = st.checkbox(
+                "Tümünü Seç / Kaldır", 
+                value=(selected_count == len(categories))
+            )
+    
+            if select_all:
+                new_selection = st.multiselect(
+                    "Kategoriler",
+                    categories,
+                    default=categories
+                )
+            else:
+                new_selection = st.multiselect(
+                    "Kategoriler",
+                    categories,
+                    default=selected_categories
+                )
+    
+            apply_btn = st.button("Uygula")
+    
+            if apply_btn:
+                selected_categories = new_selection
+                st.experimental_rerun()
+
 
 
 
@@ -586,14 +610,34 @@ with tab2:
 
         with cB:
             st.markdown(f"#### {nl(nut_choice, lang)}")
-            fig_hist = px.histogram(
-                filtered_df,
-                x=nut_choice,
-                nbins=25,
-                color="category",
-                marginal="box",
-                labels={nut_choice: nl(nut_choice, lang)},
+        
+            # --- KATEGORİLERİ TOP 12 + OTHER OLARAK YENİDEN GRUPLA ---
+            cat_counts = filtered_df["category"].value_counts()
+            top_cats = cat_counts.nlargest(12).index
+        
+            df_plot = filtered_df.copy()
+            df_plot["category_grouped"] = df_plot["category"].apply(
+                lambda x: x if x in top_cats else "Other Categories"
             )
+        
+            # --- HISTOGRAM ---
+            fig_hist = px.histogram(
+                df_plot,
+                x=nut_choice,
+                color="category_grouped",
+                nbins=25,
+                barmode="overlay",
+                opacity=0.75,
+                labels={
+                    nut_choice: nl(nut_choice, lang),
+                    "category_grouped": "Category"
+                },
+            )
+            fig_hist.update_layout(
+                legend_title_text="Category (Grouped)",
+                bargap=0.05  # daha temiz görünüm
+            )
+        
             st.plotly_chart(fig_hist, use_container_width=True)
 
 # =========================================================
