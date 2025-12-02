@@ -704,10 +704,11 @@ with tab5:
         smart_df = smart_df.sort_values("calories", ascending=True)
 
     elif mode == t("smart_high_iron", lang):
-        smart_df["iron_density"] = smart_df["iron"] / smart_df["calories"]
-        smart_df = smart_df.dropna(subset=["iron_density"])
-        smart_df = smart_df.sort_values("iron_density", ascending=False)
-    
+        smart_df = smart_df[smart_df["iron"] >= 2]   # Bilimsel eşik
+        smart_df = smart_df.sort_values(
+            ["iron", "health_score"],
+            ascending=[False, False]
+    )
     elif mode == t("smart_vitc", lang):
         smart_df["vitc_density"] = smart_df["vitamin_c"] / smart_df["calories"]
         smart_df = smart_df.dropna(subset=["vitc_density"])
