@@ -141,220 +141,154 @@ def inject_css(theme: str):
     if theme == "Dark":
         css = """
         <style>
-        /* === GLOBAL DARK BACKGROUND === */
+
+        /* ====== GLOBAL RESET ====== */
+        header, .ea3mdgi4 {
+            background: transparent !important;
+            height: 0px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        /* ====== BACKGROUND ====== */
         body, [data-testid="stAppViewContainer"] {
             background: radial-gradient(circle at top left,#0a0f1e 0%,#111827 45%,#0a0f1e 100%) !important;
             color: #e5e7eb !important;
         }
 
-        /* HEADER boşluğu kaldır */
-        header, .ea3mdgi4 {
-            background: transparent !important;
-        }
-
-        /* === SIDEBAR === */
+        /* ====== SIDEBAR ====== */
         section[data-testid="stSidebar"] {
             background: linear-gradient(to bottom,#0a0f1e,#111827) !important;
             color: #dce7f3 !important; 
         }
 
-        .stSidebar h1, .stSidebar h2, .stSidebar h3 {
-            color: #9FFFCB !important;
-            font-weight: 700 !important;
-        }
-
-        /* === DASHBOARD ANA BAŞLIK (##) === */
-        .stMarkdown h2 {
-            font-size: 36px !important;
-            font-weight: 800 !important;
-            letter-spacing: -0.5px !important;
-            color: #9FFFCB !important;
-        }
-
-        /* === SECTION BAŞLIKLARI (####) === */
-        .stMarkdown h4 {
-            font-size: 20px !important;
-            font-weight: 700 !important;
-            color: #7EE0B5 !important;
-        }
-
-        /* Açıklama metinleri */
-        p, label, span, .markdown-text-container {
-            color: #dbe3ed !important;
-        }
-
-        /* === HEADER BANNER === */
+        /* ----- Dashboard Header Banner ----- */
         .app-header-banner {
             width: 100%;
-            margin-bottom: 1.2rem;
-            padding: 1.1rem 1.4rem;
-            border-radius: 0.9rem;
-            background: rgba(15,23,42,0.78);
+            padding: 1.4rem 1.8rem;
+            border-radius: 1.1rem;
+            background: rgba(15,23,42,0.82);
             border: 1px solid rgba(148,163,184,0.35);
             box-shadow: 0 18px 45px rgba(15,23,42,0.85);
             display: flex;
             align-items: center;
+            margin-bottom: 1.4rem;
         }
-        .app-header-left { display: flex; align-items: center; gap: 0.9rem; }
-        .app-logo { font-size: 1.9rem; filter: drop-shadow(0 0 10px rgba(159,255,203,0.45)); }
+
+        .app-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.1rem;
+        }
+
+        .app-logo {
+            font-size: 2.3rem;
+            filter: drop-shadow(0 0 10px rgba(159,255,203,0.55));
+        }
+
+        /* ====== DASHBOARD ANA BAŞLIK (EN BÜYÜK) ====== */
         .app-title {
-            font-size: 1.3rem;
-            font-weight: 800;
+            font-size: 2.35rem !important;   /* artık en büyük başlık */
+            font-weight: 900 !important;
             letter-spacing: -0.03em;
-            color: #9FFFCB;
+            color: #9FFFCB !important;
         }
+
         .app-subtitle {
-            font-size: 0.93rem;
-            color: #e5e7eb;
-            opacity: 0.9;
+            font-size: 1.05rem !important;
+            color: #d8dee9 !important;
+            opacity: 0.92;
         }
 
-        /* === TABS === */
-        .stTabs [data-baseweb="tab"] {
-            color: #b7c2cf !important;
-            font-weight: 500;
+        /* TAB BAŞLIKLARI H2 – KÜÇÜLTÜLDÜ */
+        h2 {
+            font-size: 26px !important;
+            font-weight: 800 !important;
+            color: #7EE0B5 !important;
         }
-        .stTabs [data-baseweb="tab"]:hover {
-            color: #9FFFCB !important;
-        }
-        .stTabs [aria-selected="true"] {
-            color: #9FFFCB !important;
+
+        /* ====== ALT BAŞLIKLAR (#### ) ====== */
+        h3, h4 {
+            font-size: 20px !important;
             font-weight: 700 !important;
-            border-bottom: 3px solid #9FFFCB !important;
         }
 
-        /* === KPI CARDS === */
-        .kpi-card {
-            background: rgba(17,24,39,0.9) !important;
-            border: 1px solid #1f2937 !important;
-            border-radius: 1rem;
-            padding: 1.2rem 1.4rem;
-            box-shadow: 0 22px 50px rgba(0,0,0,0.55);
-        }
-        .kpi-label { color: #9dbad5 !important; }
-        .kpi-value { color: #ffffff !important; }
-        .kpi-sub   { color: #c7d3df !important; }
-
-        /* === INPUTS === */
-        .stTextInput input,
-        .stNumberInput input {
-            background-color: #f9fafb !important;
-            color: #111827 !important;
-            border-radius: 6px !important;
-        }
-
-        /* === SELECTBOX === */
-        div[data-baseweb="select"] > div {
-            background-color: #0f172a !important;
-            color: #e2e8f0 !important;
-            border: 1px solid #334155 !important;
-        }
-        ul[role="listbox"] {
-            background-color: #0f172a !important;
-            color: #e2e8f0 !important;
-            border: 1px solid #334155 !important;
-        }
-        ul[role="listbox"] li:hover {
-            background-color: #1e293b !important;
-            color: #9FFFCB !important;
-        }
-        div[data-baseweb="select"] svg { color: #9FFFCB !important; }
-
-        /* === BUTTONS === */
-        .stButton > button {
+        /* ====== BUTTONS ====== */
+        .stButton > button, button[kind="primary"], .stButton button div {
             background-color: #9FFFCB !important;
-            color: #0a0f1e !important;
+            color: #0a0f1e !important;   /* siyah */
             font-weight: 800 !important;
             border-radius: 6px !important;
-            border: none !important;
         }
+
         .stButton > button:hover {
             background-color: #7AEFB2 !important;
             color: #022c22 !important;
         }
 
-        /* === PLOTLY TITLE FIX === */
-        .js-plotly-plot .gtitle {
-            font-size: 18px !important;
+        /* ====== PLOTLY GRAPH TITLES ====== */
+        .js-plotly-plot .plotly .gtitle {
+            font-size: 17px !important;
             font-weight: 600 !important;
-        }
-
-        /* INFO / WARNING / CAPTION renk düzeltme */
-        .stAlert, .stCaption, .stMarkdown p {
-            color: #dbe3ed !important;
         }
 
         </style>
         """
+
     else:
         css = """
         <style>
+
+        header, .ea3mdgi4 {
+            background: transparent !important;
+            height: 0px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
         body, [data-testid="stAppViewContainer"] {
             background: linear-gradient(to bottom,#f9fafb,#e5e7eb) !important;
             color: #111827 !important;
         }
 
         section[data-testid="stSidebar"] {
-            background: linear-gradient(to bottom,#f9fafb,#e5e7eb) !important;
-            color:#111827 !important;
+            background: linear-gradient(to bottom,#f1f5f9,#e5e7eb) !important;
         }
 
-        /* Dashboard h2 */
-        .stMarkdown h2 {
-            font-size: 34px !important;
-            font-weight: 800 !important;
-            color: #047857 !important;
-        }
-
-        /* Section h4 */
-        .stMarkdown h4 {
-            font-size: 18px !important;
-            font-weight: 700 !important;
-            color: #065f46 !important;
-        }
-
-        .kpi-card {
-            background: rgba(255,255,255,0.96);
-            border: 1px solid #e5e7eb;
-            border-radius: 1rem;
-            padding: 1rem 1.25rem;
-            box-shadow: 0 14px 30px rgba(148,163,184,0.35);
-            color:#111827;
-        }
-
-        .kpi-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color:#6b7280;
-        }
-        .kpi-value { font-size: 1.6rem; font-weight: 700; }
-        .kpi-sub { font-size: 0.8rem; color:#9ca3af; }
-
-        /* Light mode header banner */
         .app-header-banner {
-            background: rgba(255,255,255,0.9);
+            width: 100%;
+            padding: 1.4rem 1.8rem;
+            border-radius: 1.1rem;
+            background: rgba(255,255,255,0.88);
             border: 1px solid rgba(209,213,219,0.9);
             box-shadow: 0 18px 45px rgba(148,163,184,0.45);
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.4rem;
         }
-        .app-title { color: #047857 !important; }
 
-        /* Buttons Light */
+        .app-title {
+            font-size: 2.35rem !important;
+            font-weight: 900 !important;
+            color: #047857 !important;  /* koyu yeşil */
+        }
+
+        .app-subtitle {
+            font-size: 1.05rem !important;
+            color: #374151 !important;
+        }
+
+        h2 {
+            font-size: 26px !important;
+            font-weight: 800 !important;
+        }
+
         .stButton > button {
-            background-color: #047857 !important;
+            background-color: #10b981 !important;
             color: white !important;
-            font-weight: 700 !important;
-        }
-        .stButton > button:hover {
-            background-color: #065f46 !important;
-            color: white !important;
+            font-weight: 800 !important;
         }
 
-        /* Plotly title */
-        .js-plotly-plot .gtitle {
-            font-size: 18px !important;
-            font-weight: 600 !important;
-        }
         </style>
         """
     st.markdown(css, unsafe_allow_html=True)
