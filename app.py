@@ -27,8 +27,8 @@ LANG_MAP = {"Türkçe": "tr", "English": "en"}
 
 TEXT = {
     "app_title": {
-        "tr": "Food Nutrition Intelligence – Yapay Zekâ Destekli Besin Zekâsı Paneli",
-        "en": "Food Nutrition Intelligence – An AI-Powered Nutrition Analytics Platform",
+        "tr": "Food Nutrition Intelligence –  Besin Zekâsı Paneli",
+        "en": "Food Nutrition Intelligence –  Nutrition Analytics Platform",
     },
     "subtitle": {
         "tr": "150’den fazla gıdanın besin profillerini kullanarak analiz yapan, modelleyen, kümelendiren ve öneride bulunan kapsamlı bir besin zekâsı platformu.",
