@@ -288,7 +288,7 @@ def inject_css(theme: str):
         /* === BUTTONS === */
         .stButton button, button[kind="primary"] {
             background-color: #9FFFCB !important;
-            color: #052e16 !important;
+            color: #111827 !important;
             font-weight: 800 !important;
             border-radius: 6px !important;
             border: none !important;
@@ -298,7 +298,12 @@ def inject_css(theme: str):
             background-color: #7AEFB2 !important;
             color: #022c22 !important;
         }
-
+        
+        /* Plotly chart title küçültme */
+        .js-plotly-plot .plotly .gtitle {
+            font-size: 18px !important;
+            font-weight: 600 !important;
+        }
         </style>
         """
     else:
