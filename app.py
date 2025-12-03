@@ -141,102 +141,111 @@ def inject_css(theme: str):
     if theme == "Dark":
         css = """
         <style>
-
-        /* === DARK MODE BASE === */
+    
+        /* === GLOBAL DARK BACKGROUND === */
         body, [data-testid="stAppViewContainer"] {
-            background: radial-gradient(circle at top left, #0a0f1e 0%, #111827 45%, #0a0f1e 100%) !important;
-            color: #ffffff !important;  /* BEYAZ METİNLER KALDI */
-        }
-
-        section[data-testid="stSidebar"] {
-            background: linear-gradient(to bottom, #0a0f1e, #111827) !important;
-            color: #ffffff !important;
-        }
-
-        /* === SADECE GRİ OLANLARI AÇIK MAVİ YAP === */
-
-        /* Label (gri text olan kısımlar) */
-        label, .stRadio label, .stSlider label, .stSelectbox label, .stMultiSelect label {
-            color: #b9ddff !important;   /* ice-blue sadece gri alanlara */
-            font-weight: 600;
-        }
-
-        /* Caption (Kategori sayısı, tablo altı gibi küçük gri metinler) */
-        .stCaption, caption, .stMarkdown small, .stMarkdown em {
-            color: #b9ddff !important;
-        }
-
-        /* Section başlıklarının altındaki gri açıklamalar */
-        p {
-            color: #e0efff !important; /* hafif mavi, çok parlak değil */
-        }
-
-        /* Expander başlığı – önceden griydi */
-        .streamlit-expanderHeader {
-            color: #b9ddff !important;
-            font-weight: 600;
-        }
-
-        /* Tabs - gri olanlar */
-        .stTabs [data-baseweb="tab"] {
-            color: #cce6ff !important;
-        }
-        .stTabs [data-baseweb="tab"]:hover {
-            color: #ffffff !important;
-        }
-        .stTabs [aria-selected="true"] {
-            color: #ffffff !important;
-            border-bottom: 3px solid #facc15 !important;
-        }
-        /* === DARK MODE: Başlıklar, alt başlıklar, açıklamalar, grafik başlıkları === */
-        
-        /* H2 – sayfa büyük başlıkları */
-        h2, .stMarkdown h2 {
-            color: #ffffff !important;
-        }
-        
-        /* H3 / H4 – bölüm başlıkları (örneğin: Food List, Smart Picks, Detail…) */
-        h3, h4, .stMarkdown h3, .stMarkdown h4 {
-            color: #ffffff !important;
-        }
-        
-        /* Plotly grafik başlıkları */
-        .js-plotly-plot .plotly-title {
-            fill: #ffffff !important;
-            color: #ffffff !important;
-        }
-        
-        /* Captions / açıklamalar (ör: “Predicts calories...” “Clusters foods…”) */
-        .block-container p,
-        .stCaption, .stMarkdown p {
+            background: radial-gradient(circle at top left,#0a0f1e 0%,#111827 45%,#0a0f1e 100%) !important;
             color: #e5e7eb !important;
+            margin-top: 0 !important;
+            padding-top: 0 !important;
         }
-        
-        /* Smart Picks modlarının yazıları */
-        .stRadio label {
-            color: #ffffff !important;
+    
+        /* ÜSTTEKİ BEYAZ BOŞLUĞU YOK ET */
+        header, .ea3mdgi4 {
+            background: transparent !important;
         }
-        
-        /* Tab içindeki başlık + label + slider etiketleri */
-        .stSelectbox label,
-        .stSlider label,
-        .stNumberInput label,
-        .stMultiSelect label {
-            color: #ffffff !important;
+    
+        /* === SIDEBAR === */
+        section[data-testid="stSidebar"] {
+            background: linear-gradient(to bottom,#0a0f1e,#111827) !important;
+            color: #dce7f3 !important; 
+        }
+    
+        .stSidebar h1, .stSidebar h2, .stSidebar h3,
+        .stSidebar h4, .stSidebar h5 {
+            color: #e2ecf7 !important;  /* buz mavisi */
             font-weight: 600 !important;
         }
-        
-        /* Compare sekmesindeki “Detail”, “Food Comparison” başlıkları */
-        div[data-testid="stMarkdown"] h3,
-        div[data-testid="stMarkdown"] h4 {
+    
+        /* Sidebar etiketleri */
+        .stRadio label, .stSlider label, .stSelectbox label,
+        .stMultiSelect label {
+            color: #c8d3e0 !important;  /* açık gri/buz tonu */
+            font-weight: 600;
+        }
+    
+        /* === ANA BAŞLIKLAR — NEON CYAN === */
+        h1, h2, h3, h4 {
+            color: #38e8ff !important; 
+            font-weight: 700 !important;
+        }
+    
+        /* Alt başlık ve açıklama metinleri — parlak gri */
+        p, label, span, div, .markdown-text-container {
+            color: #dbe3ed !important;
+        }
+    
+        /* === TABLAR === */
+        .stTabs [data-baseweb="tab"] {
+            color: #b7c2cf !important;
+            font-weight: 500;
+        }
+    
+        .stTabs [data-baseweb="tab"]:hover {
+            color: #e2ecf7 !important; /* buz mavisi */
+        }
+    
+        /* SEÇİLİ TAB — NEON CYAN ALT ÇİZGİ */
+        .stTabs [aria-selected="true"] {
+            color: #38e8ff !important;
+            font-weight: 700 !important;
+            border-bottom: 3px solid #38e8ff !important;
+        }
+    
+        /* === KPI CARDS === */
+        .kpi-card {
+            background: rgba(17,24,39,0.85) !important;
+            border: 1px solid #1f2937 !important;
+            border-radius: 1rem;
+            padding: 1.2rem 1.4rem;
+            box-shadow: 0 22px 50px rgba(0,0,0,0.55);
+        }
+    
+        .kpi-label {
+            color: #9dbad5 !important;
+        }
+    
+        .kpi-value {
             color: #ffffff !important;
         }
-        
-        /* ML Lab açıklamalar */
-        .stMarkdown small, .stMarkdown span {
-            color: #e5e7eb !important;
+    
+        .kpi-sub {
+            color: #c7d3df !important;
         }
-
+    
+        /* === INPUT / SELECT / SLIDER === */
+        .stTextInput input,
+        .stNumberInput input,
+        .stSelectbox div[data-baseweb="select"] > div {
+            background-color: #f9fafb !important;
+            color: #111827 !important;
+            border-radius: 6px !important;
+        }
+    
+        /* === BUTTONS — ARTIK GÖRÜNÜYOR === */
+        button[kind="primary"], .stButton button {
+            background-color: #38e8ff !important;
+            color: #0a0f1e !important;
+            font-weight: 700;
+            border-radius: 6px;
+            border: none;
+        }
+    
+        button[kind="primary"]:hover, .stButton button:hover {
+            background-color: #1cc9e3 !important;
+            color: #000 !important;
+        }
+    
         </style>
         """
 
