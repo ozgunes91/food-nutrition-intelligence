@@ -395,6 +395,35 @@ def inject_css(theme: str):
         .js-plotly-plot .plotly .gtitle {
             fill: #E5E7EB !important;
         }
+        /* FIX: Dark mode selectbox written text invisible issue */
+        /* Popup içindeki gri blur overlay tamamen kapatılır */
+        div[data-baseweb="select"] > div {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+        
+        /* Listbox kutusu tamamen koyu ve blur'suz olur */
+        ul[role="listbox"] {
+            background: rgba(15,23,42,1) !important;  /* tam koyu */
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+        
+        /* Listedeki yazılar net beyaz */
+        ul[role="listbox"] li * {
+            color: #E5E7EB !important;
+            opacity: 1 !important;
+            filter: none !important;
+        }
+        
+        /* Hover olduğunda sarımsı highlight + siyah yazı */
+        ul[role="listbox"] li:hover {
+            background: #22c55e !important;
+        }
+        ul[role="listbox"] li:hover * {
+            color: #020617 !important;
+        }
+
         </style>
         """
     else:
@@ -765,20 +794,27 @@ selected_categories = st.session_state.selected_categories
 # =========================================================
 # SIDEBAR
 # =========================================================
+# =========================================================
+# SIDEBAR
+# =========================================================
 with st.sidebar:
+
+    # --- CONTROL PANEL (En üste alındı) ---
     st.markdown(f"### 🧭 {t('sidebar_control', lang)}")
-    # Language selection first (label sabit)
+    st.markdown("---")
+
+    # --- LANGUAGE ---
     lang_choice = st.radio(
-        "Dil",
+        t("sidebar_language", lang),
         options=list(LANG_MAP.keys()),
         index=0,
     )
     lang = LANG_MAP[lang_choice]
 
-
+    # --- THEME ---
     theme_choice = st.radio(
         label=t("sidebar_theme", lang),
-        options=[t("theme_dark", lang), t("theme_light", lang)],
+        options=[t("theme_dark', lang), t('theme_light', lang)],
         index=0,
     )
     theme = "Dark" if theme_choice == t("theme_dark", lang) else "Light"
@@ -786,6 +822,7 @@ with st.sidebar:
 
     st.markdown("---")
 
+    # --- CATEGORIES ---
     st.markdown(f"### {t('sidebar_categories', lang)}")
 
     selected_count = len(selected_categories)
@@ -820,6 +857,7 @@ with st.sidebar:
             st.session_state.selected_categories = new_selection
             st.experimental_rerun()
 
+    # --- CALORIE SLIDER ---
     min_cal, max_cal = int(df["calories"].min()), int(df["calories"].max())
     calorie_range = st.slider(
         t("sidebar_calorie_range", lang),
@@ -829,22 +867,25 @@ with st.sidebar:
         step=10,
     )
 
+    # --- NUTRIENT FOCUS ---
     focus = st.radio(
         t("sidebar_focus", lang),
         options=[
-            t("focus_all", lang),
-            t("focus_high_protein", lang),
-            t("focus_low_carb", lang),
-            t("focus_low_fat", lang),
+            t("focus_all', lang),
+            t("focus_high_protein', lang),
+            t("focus_low_carb', lang),
+            t("focus_low_fat', lang),
         ],
     )
 
+    # --- CLUSTERS ---
     cluster_k = st.slider(
         "K-Means clusters (ML Lab)",
         min_value=2,
         max_value=8,
         value=4,
     )
+
 
 # =========================================================
 # FILTERED DATA
