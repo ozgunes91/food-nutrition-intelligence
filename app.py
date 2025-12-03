@@ -163,7 +163,7 @@ def inject_css(theme: str):
     
         .stSidebar h1, .stSidebar h2, .stSidebar h3,
         .stSidebar h4, .stSidebar h5 {
-            color: #e2ecf7 !important;  /* buz mavisi */
+            color: #8BEFFF !important;   /* buz mavisi */
             font-weight: 600 !important;
         }
     
@@ -176,7 +176,7 @@ def inject_css(theme: str):
     
         /* === ANA BAŞLIKLAR — NEON CYAN === */
         h1, h2, h3, h4 {
-            color: #38e8ff !important; 
+            color: #8BEFFF !important;   /* buz mavisi */
             font-weight: 700 !important;
         }
     
@@ -192,7 +192,7 @@ def inject_css(theme: str):
         }
     
         .stTabs [data-baseweb="tab"]:hover {
-            color: #e2ecf7 !important; /* buz mavisi */
+            ccolor: #8BEFFF !important;   /* buz mavisi */
         }
     
         /* SEÇİLİ TAB — NEON CYAN ALT ÇİZGİ */
