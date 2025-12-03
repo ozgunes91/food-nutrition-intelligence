@@ -231,6 +231,11 @@ def inject_css(theme: str):
             font-size: 17px !important;
             font-weight: 600 !important;
         }
+        /* ====== GLOBAL METIN RENGI FIX ====== */
+        p, label, span, div, .markdown-text-container, .stMarkdown, .stText, .stCaption {
+            color: #f4f4f7 !important;
+            opacity: 1 !important;
+        }
 
         </style>
         """
