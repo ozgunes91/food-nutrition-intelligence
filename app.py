@@ -610,56 +610,77 @@ with tab2:
                 height=500,
             )
 
-        with cB:
-            st.markdown(f"#### {nl(nut_choice, lang)}")
+with cB:
+    st.markdown(f"#### {nl(nut_choice, lang)}")
 
-            # --- AKILLI 'OTHER' GRUPLAMA (OTHER HER ZAMAN DAHA AZ) ---
-            cat_counts = filtered_df["category"].value_counts()
+    # --- AKILLI 'OTHER' GRUPLAMA ---
+    cat_counts = filtered_df["category"].value_counts()
+    n_cats = len(cat_counts)
 
-            # Okunabilirlik için en fazla 12 kategori göster
-            max_k = min(12, len(cat_counts))
+    # En fazla 12 kategori gösterelim
+    max_display = min(12, n_cats)
 
-            # Varsayılan: max_k (eğer uygun k bulunamazsa)
-            best_k = max_k
+    best_k = None
+    add_other = False
 
-            for k in range(1, max_k + 1):
-                top = cat_counts.iloc[:k]
-                other = cat_counts.iloc[k:].sum()
+    # Sadece ilk max_display içinden bir bölünme arıyoruz
+    for k in range(1, max_display):
+        top = cat_counts.iloc[:k]          # ana kategoriler
+        other = cat_counts.iloc[k:].sum()  # diğerlerinin toplamı
 
-                # Diğerlerinin toplamı, ana kategoriler içindeki en küçük count'tan
-                # küçük/eşit olsun → OTHER hiçbir rengi ezmesin
-                if other <= top.min():
-                    best_k = k
-                    break
+        if other == 0:
+            # Zaten hiç kalan yok → OTHER gereksiz
+            best_k = k
+            add_other = False
+            break
 
-            top_cats = cat_counts.iloc[:best_k].index
+        # ŞART: Other toplamı, ana kategoriler içindeki en küçük count'tan küçük/eşit olsun
+        if other <= top.min():
+            best_k = k
+            add_other = True
+            break
 
-            df_plot = filtered_df.copy()
-            df_plot["category_grouped"] = np.where(
-                df_plot["category"].isin(top_cats),
-                df_plot["category"],
-                "Other Categories",
-            )
+    if best_k is None:
+        # Uygun split bulunamadıysa:
+        # - Sadece en büyük max_display kategoriyi göster
+        # - "Other Categories" YOK, kimse veriyi çarpıtmıyor
+        best_k = max_display
+        add_other = False
 
-            # --- HISTOGRAM ---
-            fig_hist = px.histogram(
-                df_plot,
-                x=nut_choice,
-                color="category_grouped",
-                nbins=25,
-                barmode="overlay",
-                opacity=0.75,
-                labels={
-                    nut_choice: nl(nut_choice, lang),
-                    "category_grouped": "Category",
-                },
-            )
-            fig_hist.update_layout(
-                legend_title_text="Category (Grouped)",
-                bargap=0.05,
-            )
+    top_cats = cat_counts.iloc[:best_k].index
 
-            st.plotly_chart(fig_hist, use_container_width=True)
+    if add_other:
+        # Ana kategoriler + küçüklerin birleştiği bir Other
+        df_plot = filtered_df.copy()
+        df_plot["category_grouped"] = np.where(
+            df_plot["category"].isin(top_cats),
+            df_plot["category"],
+            "Other Categories",
+        )
+    else:
+        # Sadece en büyük best_k kategori, diğerleri grafikten çıkar
+        df_plot = filtered_df[filtered_df["category"].isin(top_cats)].copy()
+        df_plot["category_grouped"] = df_plot["category"]
+
+    # --- HISTOGRAM ---
+    fig_hist = px.histogram(
+        df_plot,
+        x=nut_choice,
+        color="category_grouped",
+        nbins=25,
+        barmode="overlay",
+        opacity=0.75,
+        labels={
+            nut_choice: nl(nut_choice, lang),
+            "category_grouped": "Category",
+        },
+    )
+    fig_hist.update_layout(
+        legend_title_text="Category (Grouped)",
+        bargap=0.05,
+    )
+
+    st.plotly_chart(fig_hist, use_container_width=True)
 
 # =========================================================
 # TAB 3 – COMPARE
