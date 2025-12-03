@@ -162,7 +162,12 @@ def inject_css(theme: str):
             color: #9FFFCB !important;   /* mint */
             font-weight: 700 !important;
         }
-
+                /* DASHBOARD ANA BAŞLIK BOYUTU */
+        h2 {
+            font-size: 36px !important;   /* büyüt -> istersen 40px yaparız */
+            font-weight: 800 !important;
+        }
+        
         /* Sidebar label’lar */
         .stRadio label, .stSlider label, .stSelectbox label, 
         .stMultiSelect label {
@@ -304,6 +309,11 @@ def inject_css(theme: str):
             font-size: 18px !important;
             font-weight: 600 !important;
         }
+                /* --- KOYU MOD BUTON YAZI RENGİ FIX --- */
+        .stButton button, button[kind="primary"], div.stButton > button {
+            color: #0a0f1e !important;     /* siyah */
+            font-weight: 700 !important;
+        }
         </style>
         """
     else:
@@ -378,6 +388,11 @@ def inject_css(theme: str):
         .stRadio label {
             color: #111827 !important;
             font-weight: 600 !important;
+        }
+                /* DASHBOARD ANA BAŞLIK BOYUTU */
+        h2 {
+            font-size: 36px !important;   /* büyüt -> istersen 40px yaparız */
+            font-weight: 800 !important;
         }
         </style>
         """
