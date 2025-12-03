@@ -245,7 +245,35 @@ def inject_css(theme: str):
             background-color: #1cc9e3 !important;
             color: #000 !important;
         }
-    
+                /* === SELECTBOX & DROPDOWN (Dark Mode Fix) === */
+        div[data-baseweb="select"] > div {
+            background-color: #0f172a !important;  /* koyu lacivert */
+            color: #e2e8f0 !important;             /* açık gri yazı */
+            border: 1px solid #334155 !important;  /* soft border */
+        }
+        
+        ul[role="listbox"] {
+            background-color: #0f172a !important;  /* dropdown arka plan */
+            color: #e2e8f0 !important;
+            border: 1px solid #334155 !important;
+        }
+        
+        ul[role="listbox"] li {
+            color: #e2e8f0 !important;  /* seçenek yazısı */
+            padding: 8px 12px;
+        }
+        
+        ul[role="listbox"] li:hover {
+            background-color: #1e293b !important;  /* hover */
+            color: #38e8ff !important;             /* neon cyan */
+            cursor: pointer;
+        }
+        
+        /* seçilmiş seçenek */
+        div[data-baseweb="select"] svg {
+            color: #38e8ff !important;  /* ok ikonu */
+        }
+            
         </style>
         """
 
