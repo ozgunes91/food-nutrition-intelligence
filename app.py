@@ -373,7 +373,10 @@ def inject_css(theme: str):
         ul[role="listbox"] li:hover * {
             color: #020617 !important;
         }
-
+        ul[role="listbox"] {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
         /* Slider */
         .stSlider > div[data-baseweb="slider"] > div > div {
             background: #1e293b !important;
