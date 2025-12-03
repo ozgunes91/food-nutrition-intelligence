@@ -34,7 +34,7 @@ TEXT = {
         "tr": "150+ günlük gıdanın kalori ve besin değerlerini keşfet, modelle, kümele ve öner.",
         "en": "Explore, model, cluster and recommend using nutrition profiles of 150+ everyday foods.",
     },
-    "sidebar_language": {"tr": "Dil ", "en": "Language"},
+    "sidebar_language": {"tr": "Dil", "en": "Language"},
     "sidebar_theme": {"tr": "Tema", "en": "Theme"},
     "theme_dark": {"tr": "Karanlık", "en": "Dark"},
     "theme_light": {"tr": "Aydınlık", "en": "Light"},
@@ -63,7 +63,6 @@ TEXT = {
     "recom_howmany": {"tr": "Kaç benzer gıda listelensin?", "en": "How many similar foods?"},
     "recom_button": {"tr": "Benzer Gıdaları Bul", "en": "Find Similar Foods"},
     "ml_predict_button": {"tr": "Kalori Tahmin Et", "en": "Predict Calories"},
-
     "section_category_macros": {
         "tr": "Kategori Bazlı Ortalama Makro Dağılımı",
         "en": "Average Macro Distribution by Category",
@@ -356,17 +355,22 @@ def inject_css(theme: str):
         div[data-baseweb="select"] * {
             color: #E5E7EB !important;
         }
-               * DROPDOWN CUSTOMIZATION */
+
+        /* DROPDOWN CUSTOMIZATION */
         ul[role="listbox"] {
-            background: rgba(15,23,42,0.98) !important;
+            background: rgba(15,23,42,1) !important;
             border-radius: 12px !important;
             border: 1px solid #334155 !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
         }
         ul[role="listbox"] li {
             background: transparent !important;
         }
         ul[role="listbox"] li * {
             color: #E5E7EB !important;
+            opacity: 1 !important;
+            filter: none !important;
         }
         ul[role="listbox"] li:hover {
             background: #22c55e !important;
@@ -374,8 +378,8 @@ def inject_css(theme: str):
         ul[role="listbox"] li:hover * {
             color: #020617 !important;
         }
-        
-        /* OVERLAY FIX — BUNU BURAYA EKLEDİN ✔ */
+
+        /* Selectbox overlay fix */
         div[data-testid="stSelectbox"] > div[style*="absolute"] {
             background: transparent !important;
             opacity: 0 !important;
@@ -395,35 +399,6 @@ def inject_css(theme: str):
         .js-plotly-plot .plotly .gtitle {
             fill: #E5E7EB !important;
         }
-        /* FIX: Dark mode selectbox written text invisible issue */
-        /* Popup içindeki gri blur overlay tamamen kapatılır */
-        div[data-baseweb="select"] > div {
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-        }
-        
-        /* Listbox kutusu tamamen koyu ve blur'suz olur */
-        ul[role="listbox"] {
-            background: rgba(15,23,42,1) !important;  /* tam koyu */
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-        }
-        
-        /* Listedeki yazılar net beyaz */
-        ul[role="listbox"] li * {
-            color: #E5E7EB !important;
-            opacity: 1 !important;
-            filter: none !important;
-        }
-        
-        /* Hover olduğunda sarımsı highlight + siyah yazı */
-        ul[role="listbox"] li:hover {
-            background: #22c55e !important;
-        }
-        ul[role="listbox"] li:hover * {
-            color: #020617 !important;
-        }
-
         </style>
         """
     else:
@@ -791,14 +766,13 @@ if "selected_categories" not in st.session_state:
     st.session_state.selected_categories = categories.copy()
 selected_categories = st.session_state.selected_categories
 
-# =========================================================
-# SIDEBAR
-# =========================================================
+# Default language before first use
+lang = "tr"
+
 # =========================================================
 # SIDEBAR
 # =========================================================
 with st.sidebar:
-
     # --- CONTROL PANEL (En üste alındı) ---
     st.markdown(f"### 🧭 {t('sidebar_control', lang)}")
     st.markdown("---")
@@ -814,7 +788,7 @@ with st.sidebar:
     # --- THEME ---
     theme_choice = st.radio(
         label=t("sidebar_theme", lang),
-        options=[t('theme_dark', lang), t('theme_light', lang)],
+        options=[t("theme_dark", lang), t("theme_light", lang)],
         index=0,
     )
     theme = "Dark" if theme_choice == t("theme_dark", lang) else "Light"
@@ -871,10 +845,10 @@ with st.sidebar:
     focus = st.radio(
         t("sidebar_focus", lang),
         options=[
-            t('focus_all', lang),
-            t('focus_high_protein', lang),
-            t('focus_low_carb', lang),
-            t('focus_low_fat', lang),
+            t("focus_all", lang),
+            t("focus_high_protein", lang),
+            t("focus_low_carb", lang),
+            t("focus_low_fat", lang),
         ],
     )
 
@@ -1210,7 +1184,11 @@ with tab4:
         clustered_df, explained = compute_clusters(df, cluster_k)
         st.write(f"PCA variance explained: **{explained*100:.1f}%**")
 
-        title_cluster = "Gıda Besin Haritası (PCA + K-Means)" if lang == "tr" else "Food Nutrition Map (PCA + K-Means)"
+        title_cluster = (
+            "Gıda Besin Haritası (PCA + K-Means)"
+            if lang == "tr"
+            else "Food Nutrition Map (PCA + K-Means)"
+        )
         fig_cluster = px.scatter(
             clustered_df,
             x="pc1",
@@ -1328,7 +1306,11 @@ with tab6:
             use_container_width=True,
         )
 
-        title_sim = "En Benzer Gıdalar (Kosinüs Benzerliği)" if lang == "tr" else "Most Similar Foods (Cosine Similarity)"
+        title_sim = (
+            "En Benzer Gıdalar (Kosinüs Benzerliği)"
+            if lang == "tr"
+            else "Most Similar Foods (Cosine Similarity)"
+        )
         fig_bar = px.bar(
             result,
             x="food_name",
