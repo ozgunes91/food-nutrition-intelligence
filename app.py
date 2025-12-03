@@ -351,6 +351,8 @@ def inject_css(theme: str):
             background: rgba(15,23,42,0.9) !important;
             border-radius: 10px !important;
             border: 1px solid #334155 !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
         }
         div[data-baseweb="select"] * {
             color: #E5E7EB !important;
@@ -377,13 +379,6 @@ def inject_css(theme: str):
         }
         ul[role="listbox"] li:hover * {
             color: #020617 !important;
-        }
-
-        /* Selectbox overlay fix */
-        div[data-testid="stSelectbox"] > div[style*="absolute"] {
-            background: transparent !important;
-            opacity: 0 !important;
-            backdrop-filter: none !important;
         }
 
         /* Slider */
@@ -759,21 +754,22 @@ def build_similarity_matrix(data: pd.DataFrame):
 sim_matrix = build_similarity_matrix(df)
 
 # =========================================================
-# CATEGORY STATE
+# LANGUAGE & CATEGORY STATE
 # =========================================================
+if "lang" not in st.session_state:
+    st.session_state.lang = "tr"
+lang = st.session_state.lang
+
 categories = sorted(df["category"].unique())
 if "selected_categories" not in st.session_state:
     st.session_state.selected_categories = categories.copy()
 selected_categories = st.session_state.selected_categories
 
-# Default language before first use
-lang = "tr"
-
 # =========================================================
 # SIDEBAR
 # =========================================================
 with st.sidebar:
-    # --- CONTROL PANEL (En üste alındı) ---
+    # --- CONTROL PANEL (en üstte) ---
     st.markdown(f"### 🧭 {t('sidebar_control', lang)}")
     st.markdown("---")
 
@@ -781,9 +777,10 @@ with st.sidebar:
     lang_choice = st.radio(
         t("sidebar_language", lang),
         options=list(LANG_MAP.keys()),
-        index=0,
+        index=0 if st.session_state.lang == "tr" else 1,
     )
     lang = LANG_MAP[lang_choice]
+    st.session_state.lang = lang
 
     # --- THEME ---
     theme_choice = st.radio(
@@ -859,7 +856,6 @@ with st.sidebar:
         max_value=8,
         value=4,
     )
-
 
 # =========================================================
 # FILTERED DATA
@@ -1184,11 +1180,7 @@ with tab4:
         clustered_df, explained = compute_clusters(df, cluster_k)
         st.write(f"PCA variance explained: **{explained*100:.1f}%**")
 
-        title_cluster = (
-            "Gıda Besin Haritası (PCA + K-Means)"
-            if lang == "tr"
-            else "Food Nutrition Map (PCA + K-Means)"
-        )
+        title_cluster = "Gıda Besin Haritası (PCA + K-Means)" if lang == "tr" else "Food Nutrition Map (PCA + K-Means)"
         fig_cluster = px.scatter(
             clustered_df,
             x="pc1",
@@ -1306,11 +1298,7 @@ with tab6:
             use_container_width=True,
         )
 
-        title_sim = (
-            "En Benzer Gıdalar (Kosinüs Benzerliği)"
-            if lang == "tr"
-            else "Most Similar Foods (Cosine Similarity)"
-        )
+        title_sim = "En Benzer Gıdalar (Kosinüs Benzerliği)" if lang == "tr" else "Most Similar Foods (Cosine Similarity)"
         fig_bar = px.bar(
             result,
             x="food_name",
