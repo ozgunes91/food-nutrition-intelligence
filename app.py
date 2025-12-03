@@ -27,12 +27,12 @@ LANG_MAP = {"Türkçe": "tr", "English": "en"}
 
 TEXT = {
     "app_title": {
-        "tr": "Food Nutrition Intelligence – Besin Zekâsı Paneli",
-        "en": "Food Nutrition Intelligence – Nutrition Intelligence Panel",
+        "tr": "Food Nutrition Intelligence – Yapay Zekâ Destekli Besin Zekâsı Paneli",
+        "en": "Food Nutrition Intelligence – An AI-Powered Nutrition Analytics Platform",
     },
     "subtitle": {
-        "tr": "150+ günlük gıdanın kalori ve besin değerlerini keşfet, modelle, kümele ve öner.",
-        "en": "Explore, model, cluster and recommend using nutrition profiles of 150+ everyday foods.",
+        "tr": "150’den fazla gıdanın besin profillerini kullanarak analiz yapan, modelleyen, kümelendiren ve öneride bulunan kapsamlı bir besin zekâsı platformu.",
+        "en": "A comprehensive nutrition intelligence platform that analyzes, models, clusters, and recommends using the nutrient profiles of 150+ foods.",
     },
     "sidebar_language": {"tr": "Dil", "en": "Language"},
     "sidebar_theme": {"tr": "Tema", "en": "Theme"},
