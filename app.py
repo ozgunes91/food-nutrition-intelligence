@@ -144,20 +144,21 @@ def inject_css(theme: str):
         /* === DARK MODE MASTER STYLE === */
         body, [data-testid="stAppViewContainer"] {
             background: radial-gradient(circle at top left, #0a0f1e 0%, #111827 45%, #0a0f1e 100%) !important;
-            color: #f3f4f6 !important;
+            color: #f3f4f6 !important; /* tüm metinler açık gri-beyaz */
         }
-
+        
+        /* Sidebar arka plan */
         section[data-testid="stSidebar"] {
             background: linear-gradient(to bottom, #0a0f1e, #111827) !important;
             color: #f3f4f6 !important;
         }
-
-        /* Sidebar başlıkları */
+        
+        /* Sidebar başlıkları – net beyaz */
         .stSidebar h1, .stSidebar h2, .stSidebar h3, .stSidebar h4, .stSidebar h5 {
             color: #ffffff !important;
         }
-
-        /* Sidebar kontrol label'ları */
+        
+        /* Sidebar slider / select / radio etiketleri – okunabilir hale getir */
         .stSlider label, 
         .stRadio label,
         .stMultiSelect label,
@@ -165,59 +166,63 @@ def inject_css(theme: str):
             color: #e5e7eb !important;
             font-weight: 600;
         }
-
+        
         /* Expander başlığı */
         .streamlit-expanderHeader {
             color: #e5e7eb !important;
             font-weight: 600;
         }
-
-        /* KPI CARDS */
+        
+        /* KPI kartları */
         .kpi-card {
-            background: rgba(17, 24, 39, 0.9);
+            background: rgba(17, 24, 39, 0.9); /* çok koyu lacivert-grimsi */
             border: 1px solid #1f2937;
             border-radius: 1rem;
             padding: 1.2rem 1.4rem;
             box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
-            color: #f9fafb !important;
+            color: #f9fafb !important; /* tam açık */
         }
-
+        
+        /* KPI iç etiketler */
         .kpi-label {
             font-size: 0.8rem;
             text-transform: uppercase;
-            color: #cbd5e1 !important;
+            color: #cbd5e1 !important; /* daha açık gri */
             letter-spacing: 0.07em;
         }
-
+        
+        /* KPI değer */
         .kpi-value {
             font-size: 1.7rem;
             font-weight: 700;
             color: #ffffff !important;
         }
-
+        
+        /* KPI alt yazı */
         .kpi-sub {
             font-size: 0.85rem;
             color: #d1d5db !important;
         }
-
-        /* Tabs */
+        
+        /* Tabs – daha modern */
         .stTabs [data-baseweb="tab"] {
             color: #d1d5db !important;
         }
         .stTabs [data-baseweb="tab"]:hover {
             color: #ffffff !important;
+            font-weight: 600;
         }
         .stTabs [aria-selected="true"] {
             color: #ffffff !important;
             font-weight: 700 !important;
-            border-bottom: 3px solid #facc15 !important;
+            border-bottom: 3px solid #facc15 !important; /* sarı vurgulu */
         }
-
+        
         /* Dataframe header */
         [data-testid="dataframe"] th {
             color: #ffffff !important;
         }
-        </style>
+
         """
     else:
         css = """
