@@ -31,8 +31,8 @@ TEXT = {
         "en": "Food Nutrition Intelligence –  Nutrition Analytics Platform",
     },
     "subtitle": {
-        "tr": "150’den fazla gıdanın besin profillerini kullanarak analiz yapan, modelleyen, kümelendiren ve öneride bulunan kapsamlı bir besin zekâsı platformu.",
-        "en": "A comprehensive nutrition intelligence platform that analyzes, models, clusters, and recommends using the nutrient profiles of 150+ foods.",
+        "tr": "200’den fazla gıdanın besin profillerini kullanarak analiz yapan, modelleyen, kümelendiren ve öneride bulunan kapsamlı bir besin zekâsı platformu.",
+        "en": "A comprehensive nutrition intelligence platform that analyzes, models, clusters, and recommends using the nutrient profiles of 200+ foods.",
     },
     "sidebar_language": {"tr": "Dil", "en": "Language"},
     "sidebar_theme": {"tr": "Tema", "en": "Theme"},
@@ -1163,7 +1163,7 @@ with tab4:
         st.write(f"Best alpha: **{best_alpha}**, CV mean R²: **{best_cv:.3f}**")
 
         p_val = st.number_input(nl("protein", lang), 0.0, 100.0, 10.0, step=1.0)
-        c_val = st.number_input(nl("carbs", lang), 0.0, 150.0, 10.0, step=1.0)
+        c_val = st.number_input(nl("carbs", lang), 0.0, 200.0, 10.0, step=1.0)
         f_val = st.number_input(nl("fat", lang), 0.0, 100.0, 5.0, step=1.0)
 
         if st.button(t("ml_predict_button", lang), key="pred_button"):
