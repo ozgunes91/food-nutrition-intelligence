@@ -814,7 +814,7 @@ with st.sidebar:
     # --- THEME ---
     theme_choice = st.radio(
         label=t("sidebar_theme", lang),
-        options=[t("theme_dark', lang), t('theme_light', lang)],
+        options=[t('theme_dark', lang), t('theme_light', lang)],
         index=0,
     )
     theme = "Dark" if theme_choice == t("theme_dark", lang) else "Light"
