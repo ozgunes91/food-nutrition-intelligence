@@ -239,10 +239,6 @@ def inject_css(theme: str):
 
         </style>
         """
-    else:
-        css = """<style></style>"""
-
-    st.markdown(css, unsafe_allow_html=True)
 
     else:
         css = """
