@@ -1125,7 +1125,7 @@ with tab3:
         )
         st.plotly_chart(fig_radar, use_container_width=True)
 
-      st.markdown(f"#### {t('compare_detail', lang)}")
+        st.markdown(f"#### {t('compare_detail', lang)}")
         st.dataframe(
             cmp_df[["food_name"] + nutrients].reset_index(drop=True),
             use_container_width=True,
