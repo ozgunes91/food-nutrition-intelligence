@@ -294,6 +294,91 @@ def inject_css(theme: str):
         header[data-testid="stHeader"] {
             background: transparent !important;
         }
+        /* ================================
+           FINAL DARK THEME FIX PACKAGE
+           Selectbox, Input, Dropdown, Button
+           ================================ */
+        
+        /* SELECTBOX ana kutu */
+        div[data-baseweb="select"] > div {
+            background-color: #0f172a !important; /* dark navy */
+            border: 1px solid #334155 !important; /* soft slate border */
+            color: #e5e7eb !important;
+        }
+        
+        /* SELECTBOX iç yazı */
+        div[data-baseweb="select"] * {
+            color: #e5e7eb !important;
+        }
+        
+        /* SELECTBOX placeholder */
+        div[data-baseweb="select"] div[data-baseweb="select"] span {
+            color: #94a3b8 !important; /* gray-400 */
+        }
+        
+        /* SELECTBOX hover border */
+        div[data-baseweb="select"] > div:hover {
+            border: 1px solid #9fffcba0 !important; /* soft mint glow */
+        }
+        
+        /* DROPDOWN liste arka planı */
+        ul[role="listbox"] {
+            background-color: #0f172a !important;
+            border: 1px solid #334155 !important;
+        }
+        
+        /* DROPDOWN listedeki her item */
+        ul[role="listbox"] li {
+            background-color: #0f172a !important;
+            color: #e5e7eb !important;
+        }
+        
+        /* DROPDOWN hover (çok önemli) */
+        ul[role="listbox"] li:hover {
+            background-color: #1e293b !important;
+            color: #9FFFCB !important;
+        }
+        
+        /* INPUT alanları */
+        input, textarea {
+            background-color: #0f172a !important;
+            border: 1px solid #334155 !important;
+            color: #e5e7eb !important;
+        }
+        
+        /* INPUT hover */
+        input:hover, textarea:hover {
+            border: 1px solid #9fffcba0 !important;
+        }
+        
+        /* INPUT placeholder */
+        input::placeholder {
+            color: #94a3b8 !important;
+            opacity: 1 !important;
+        }
+        
+        /* BUTTON (primary) */
+        .stButton button, div.stButton > button {
+            background: linear-gradient(90deg, #9FFFCB, #86efac) !important;
+            color: #0f172a !important;
+            font-weight: 700 !important;
+            border-radius: 8px !important;
+            border: none !important;
+            padding: 0.6rem 1.2rem !important;
+        }
+        
+        /* BUTTON hover */
+        .stButton button:hover {
+            background: linear-gradient(90deg, #befee0, #a9f5c2) !important;
+            color: #020617 !important;
+        }
+        
+        /* BUTTON disabled fix */
+        button:disabled {
+            opacity: 0.5 !important;
+            background-color: #334155 !important;
+            color: #94a3b8 !important;
+        }
 
         </style>
         """
