@@ -138,98 +138,113 @@ def nl(col: str, lang: str) -> str:
 # THEME / CSS (Palantir-ish)
 # =========================================================
 def inject_css(theme: str):
+    def inject_css(theme: str):
     if theme == "Dark":
         css = """
         <style>
 
-        /* === DARK MODE – ICE BLUE EDITION === */
-
+        /* === DARK MODE BASE === */
         body, [data-testid="stAppViewContainer"] {
             background: radial-gradient(circle at top left, #0a0f1e 0%, #111827 45%, #0a0f1e 100%) !important;
-            color: #d7ecff !important; /* ana metin = buz mavisi */
+            color: #ffffff !important;  /* BEYAZ METİNLER KALDI */
         }
 
-        /* Sidebar */
         section[data-testid="stSidebar"] {
             background: linear-gradient(to bottom, #0a0f1e, #111827) !important;
-            color: #d7ecff !important;
-        }
-
-        /* Sidebar başlıkları */
-        .stSidebar h1, .stSidebar h2, .stSidebar h3, .stSidebar h4, .stSidebar h5 {
-            color: #e8f5ff !important;  /* daha parlak ice-blue */
-        }
-
-        /* Slider / Select / Radio label’ları */
-        .stSlider label, 
-        .stRadio label,
-        .stMultiSelect label,
-        .stSelectbox label {
-            color: #c9e8ff !important; 
-            font-weight: 600;
-        }
-
-        /* Expander başlığı */
-        .streamlit-expanderHeader {
-            color: #c9e8ff !important;
-            font-weight: 600;
-        }
-
-        /* KPI kartları */
-        .kpi-card {
-            background: rgba(17, 24, 39, 0.92);
-            border: 1px solid #233044;
-            border-radius: 1rem;
-            padding: 1.2rem 1.4rem;
-            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-            color: #e8f7ff !important;
-        }
-
-        .kpi-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: #b7dbff !important;  /* ice-blue label */
-            letter-spacing: 0.07em;
-        }
-
-        .kpi-value {
-            font-size: 1.7rem;
-            font-weight: 700;
             color: #ffffff !important;
         }
 
-        .kpi-sub {
-            font-size: 0.85rem;
-            color: #b2d8ff !important;
+        /* === SADECE GRİ OLANLARI AÇIK MAVİ YAP === */
+
+        /* Label (gri text olan kısımlar) */
+        label, .stRadio label, .stSlider label, .stSelectbox label, .stMultiSelect label {
+            color: #b9ddff !important;   /* ice-blue sadece gri alanlara */
+            font-weight: 600;
         }
 
-        /* Tabs */
+        /* Caption (Kategori sayısı, tablo altı gibi küçük gri metinler) */
+        .stCaption, caption, .stMarkdown small, .stMarkdown em {
+            color: #b9ddff !important;
+        }
+
+        /* Section başlıklarının altındaki gri açıklamalar */
+        p {
+            color: #e0efff !important; /* hafif mavi, çok parlak değil */
+        }
+
+        /* Expander başlığı – önceden griydi */
+        .streamlit-expanderHeader {
+            color: #b9ddff !important;
+            font-weight: 600;
+        }
+
+        /* Tabs - gri olanlar */
         .stTabs [data-baseweb="tab"] {
-            color: #b4d9ff !important;
+            color: #cce6ff !important;
         }
         .stTabs [data-baseweb="tab"]:hover {
-            color: #e8f5ff !important;
+            color: #ffffff !important;
         }
         .stTabs [aria-selected="true"] {
             color: #ffffff !important;
-            font-weight: 700 !important;
-            border-bottom: 3px solid #6ec9ff !important; /* ice-blue highlight */
+            border-bottom: 3px solid #facc15 !important;
         }
-
-        /* Dataframe header */
-        [data-testid="dataframe"] th {
-            color: #e8f7ff !important;
+        /* === DARK MODE: Başlıklar, alt başlıklar, açıklamalar, grafik başlıkları === */
+        
+        /* H2 – sayfa büyük başlıkları */
+        h2, .stMarkdown h2 {
+            color: #ffffff !important;
         }
-
-        /* Dropdown arrow, slider knob, radio buttons */
-        .stSelectbox div[data-baseweb="select"] svg,
-        .stMultiSelect div[data-baseweb="select"] svg,
-        .stSlider > div > div > div > div {
-            color: #8ed8ff !important;
+        
+        /* H3 / H4 – bölüm başlıkları (örneğin: Food List, Smart Picks, Detail…) */
+        h3, h4, .stMarkdown h3, .stMarkdown h4 {
+            color: #ffffff !important;
+        }
+        
+        /* Plotly grafik başlıkları */
+        .js-plotly-plot .plotly-title {
+            fill: #ffffff !important;
+            color: #ffffff !important;
+        }
+        
+        /* Captions / açıklamalar (ör: “Predicts calories...” “Clusters foods…”) */
+        .block-container p,
+        .stCaption, .stMarkdown p {
+            color: #e5e7eb !important;
+        }
+        
+        /* Smart Picks modlarının yazıları */
+        .stRadio label {
+            color: #ffffff !important;
+        }
+        
+        /* Tab içindeki başlık + label + slider etiketleri */
+        .stSelectbox label,
+        .stSlider label,
+        .stNumberInput label,
+        .stMultiSelect label {
+            color: #ffffff !important;
+            font-weight: 600 !important;
+        }
+        
+        /* Compare sekmesindeki “Detail”, “Food Comparison” başlıkları */
+        div[data-testid="stMarkdown"] h3,
+        div[data-testid="stMarkdown"] h4 {
+            color: #ffffff !important;
+        }
+        
+        /* ML Lab açıklamalar */
+        .stMarkdown small, .stMarkdown span {
+            color: #e5e7eb !important;
         }
 
         </style>
         """
+    else:
+        css = """<style></style>"""
+
+    st.markdown(css, unsafe_allow_html=True)
+
     else:
         css = """
         <style>
@@ -263,6 +278,12 @@ def inject_css(theme: str):
             font-size: 0.8rem;
             color:#9ca3af;
         }
+        /* Yalnızca Türkçe / English / All / High Protein / Low Carb / Low Fat yazılarını beyaz yap */
+        .stRadio label {
+            color: #ffffff !important;   /* bembeyaz */
+            font-weight: 600 !important; /* net dursun */
+        }
+
         </style>
         """
 
