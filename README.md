@@ -180,7 +180,7 @@ Auto-generated lists for:
 ---
 
 
-# 📊 Results (EN)
+# 📊 Results 
 
 ### Calorie Model  
 - CV R²: **0.36**  
