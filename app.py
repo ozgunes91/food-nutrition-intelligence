@@ -610,16 +610,35 @@ with tab2:
 
         with cB:
             st.markdown(f"#### {nl(nut_choice, lang)}")
-        
-            # --- KATEGORİLERİ TOP 12 + OTHER OLARAK YENİDEN GRUPLA ---
+
+            # --- AKILLI 'OTHER' GRUPLAMA (OTHER HER ZAMAN DAHA AZ) ---
             cat_counts = filtered_df["category"].value_counts()
-            top_cats = cat_counts.nlargest(12).index
-        
+
+            # Okunabilirlik için en fazla 12 kategori göster
+            max_k = min(12, len(cat_counts))
+
+            # Varsayılan: max_k (eğer uygun k bulunamazsa)
+            best_k = max_k
+
+            for k in range(1, max_k + 1):
+                top = cat_counts.iloc[:k]
+                other = cat_counts.iloc[k:].sum()
+
+                # Diğerlerinin toplamı, ana kategoriler içindeki en küçük count'tan
+                # küçük/eşit olsun → OTHER hiçbir rengi ezmesin
+                if other <= top.min():
+                    best_k = k
+                    break
+
+            top_cats = cat_counts.iloc[:best_k].index
+
             df_plot = filtered_df.copy()
-            df_plot["category_grouped"] = df_plot["category"].apply(
-                lambda x: x if x in top_cats else "Other Categories"
+            df_plot["category_grouped"] = np.where(
+                df_plot["category"].isin(top_cats),
+                df_plot["category"],
+                "Other Categories",
             )
-        
+
             # --- HISTOGRAM ---
             fig_hist = px.histogram(
                 df_plot,
@@ -630,14 +649,14 @@ with tab2:
                 opacity=0.75,
                 labels={
                     nut_choice: nl(nut_choice, lang),
-                    "category_grouped": "Category"
+                    "category_grouped": "Category",
                 },
             )
             fig_hist.update_layout(
                 legend_title_text="Category (Grouped)",
-                bargap=0.05  # daha temiz görünüm
+                bargap=0.05,
             )
-        
+
             st.plotly_chart(fig_hist, use_container_width=True)
 
 # =========================================================
