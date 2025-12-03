@@ -11,10 +11,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.metrics.pairwise import cosine_similarity
-import plotly.io as pio
-pio.templates["custom"] = pio.templates["plotly_dark"]
-pio.templates["custom"].layout.title.font.size = 16
-pio.templates.default = "custom"
 
 # =========================================================
 # CONFIG
