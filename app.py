@@ -223,7 +223,7 @@ def inject_css(theme: str):
 
         .stButton > button:hover {
             background-color: #7AEFB2 !important;
-            color: #022c22 !important;
+            color: #0a0f1e !important;
         }
 
         /* ====== PLOTLY GRAPH TITLES ====== */
@@ -380,7 +380,7 @@ def inject_css(theme: str):
             color: #94a3b8 !important;
         }
         /* ==== DARK THEME MASTER CSS ==== */
-        /* ==== DARK THEME MASTER CSS ==== */
+       
 
         /* Ana arka plan */
         body, [data-testid="stAppViewContainer"] {
@@ -466,6 +466,22 @@ def inject_css(theme: str):
         .stButton button:hover {
             background: #34d399 !important;
             transform: translateY(-2px);
+        }
+        /* === DROPDOWN HOVER FIX (Dark Mode) === */
+
+        /* Hover edilen item -> siyah yazı */
+        ul[role="listbox"] li:hover * {
+            color: #000000 !important;
+        }
+        
+        /* Normal liste item yazısı -> beyaz (kalsın) */
+        ul[role="listbox"] li * {
+            color: #E5E7EB !important;
+        }
+        
+        /* Seçili item (input içinde olan) -> beyaz */
+        div[data-baseweb="select"] span {
+            color: #E5E7EB !important;
         }
 
         </style>
