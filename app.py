@@ -142,378 +142,65 @@ def inject_css(theme: str):
         css = """
         <style>
 
-        /* ====== GLOBAL RESET ====== */
+        /* ===========================================
+           GLOBAL RESET
+        ============================================*/
         header, .ea3mdgi4 {
             background: transparent !important;
-            height: 0px !important;
+            height: 0 !important;
             padding: 0 !important;
             margin: 0 !important;
         }
 
-        /* ====== BACKGROUND ====== */
         body, [data-testid="stAppViewContainer"] {
             background: radial-gradient(circle at top left,#0a0f1e 0%,#111827 45%,#0a0f1e 100%) !important;
             color: #e5e7eb !important;
         }
 
-        /* ====== SIDEBAR ====== */
         section[data-testid="stSidebar"] {
             background: linear-gradient(to bottom,#0a0f1e,#111827) !important;
             color: #dce7f3 !important; 
         }
 
-        /* ----- Dashboard Header Banner ----- */
-        .app-header-banner {
-            width: 100%;
-            padding: 1.4rem 1.8rem;
-            border-radius: 1.1rem;
-            background: rgba(15,23,42,0.82);
-            border: 1px solid rgba(148,163,184,0.35);
-            box-shadow: 0 18px 45px rgba(15,23,42,0.85);
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.4rem;
+        /* ===========================================
+           PALANTIR DARK GLASS KPI CARD
+        ============================================*/
+        .kpi-card {
+            border-radius: 15px !important;
+            padding: 20px 25px !important;
+
+            background: rgba(15,23,42,0.55) !important;   /* CAM ETKİSİ */
+            backdrop-filter: blur(14px) !important;
+
+            border: 1px solid rgba(148,163,184,0.25) !important;
+            box-shadow: 0 18px 45px rgba(0,0,0,0.65) !important;
+
+            color: #E8F1FF !important;
         }
 
-        .app-header-left {
-            display: flex;
-            align-items: center;
-            gap: 1.1rem;
+        .kpi-card h3, .kpi-card p, .kpi-card .value {
+            color: #E8F1FF !important;
         }
 
-        .app-logo {
-            font-size: 2.3rem;
-            filter: drop-shadow(0 0 10px rgba(159,255,203,0.55));
-        }
-
-        /* ====== DASHBOARD ANA BAŞLIK (EN BÜYÜK) ====== */
-        .app-title {
-            font-size: 2.35rem !important;   /* artık en büyük başlık */
-            font-weight: 900 !important;
-            letter-spacing: -0.03em;
-            color: #9FFFCB !important;
-        }
-
-        .app-subtitle {
-            font-size: 1.05rem !important;
-            color: #d8dee9 !important;
-            opacity: 0.92;
-        }
-
-        /* TAB BAŞLIKLARI H2 – KÜÇÜLTÜLDÜ */
-        h2 {
+        .kpi-card .value {
             font-size: 26px !important;
             font-weight: 800 !important;
-            color: #7EE0B5 !important;
         }
 
-        /* ====== ALT BAŞLIKLAR (#### ) ====== */
-        h3, h4 {
-            font-size: 20px !important;
-            font-weight: 700 !important;
-        }
-
-        /* ====== BUTTONS ====== */
-        .stButton > button, button[kind="primary"], .stButton button div {
-            background-color: #9FFFCB !important;
-            color: #0a0f1e !important;   /* siyah */
-            font-weight: 800 !important;
-            border-radius: 6px !important;
-        }
-
-        .stButton > button:hover {
-            background-color: #7AEFB2 !important;
-            color: #0a0f1e !important;
-        }
-
-        /* ====== PLOTLY GRAPH TITLES ====== */
-        .js-plotly-plot .plotly .gtitle {
-            font-size: 17px !important;
-            font-weight: 600 !important;
-        }
-        /* ====== GLOBAL METIN RENGI FIX ====== */
-        p, label, span, div, .markdown-text-container, .stMarkdown, .stText, .stCaption {
-            color: #f4f4f7 !important;
-            opacity: 1 !important;
-        }
-        /* === GENEL GLOBAL RENGİ KESİN DÜZELTEN KOD === */
-
-        /* Ana metin ( gri olan her şey ) */
-        html, body, [data-testid="stAppViewContainer"], p, span, label, div, h1, h2, h3, h4, h5 {
-            color: #E5E7EB !important;
-        }
-        
-        /* Selectbox iç yazı ve placeholder */
-        div[data-baseweb="select"] * {
-            color: #E5E7EB !important;
-        }
-        
-        /* Selectbox dropdown içi */
-        ul[role="listbox"] li * {
-            color: #E5E7EB !important;
-        }
-        
-        /* Selectbox hovered item */
-        ul[role="listbox"] li:hover * {
-            color: #9FFFCB !important; /* mint hover */
-        }
-        
-        /* Input içi yazı */
-        input, textarea {
-            color: #E5E7EB !important;
-        }
-        
-        /* Input placeholder (çok gizli bir selector) */
-        input::placeholder {
-            color: #CBD5E1 !important;
-            opacity: 1 !important;
-        }
-        
-        /* Tab başlıkları gri kalıyordu → düzeltme */
-        .stTabs [data-baseweb="tab"] p {
-            color: #E5E7EB !important;
-        }
-        
-        .stTabs [aria-selected="true"] p {
-            color: #9FFFCB !important;
-            font-weight: 700 !important;
-        }
-        
-        /* Section başlığı hala koyu gri kalıyordu → FIX */
-        h3, h4, h5 {
-            color: #9FFFCB !important;
-        }
-        
-        /* Button text kesin siyah olsun */
-        .stButton button, button[kind="primary"], div.stButton > button {
-            color: #0a0f1e !important;
-            font-weight: 800 !important;
-        }
-        
-        /* Light moddaki beyaz tavan FIX */
-        header[data-testid="stHeader"] {
-            background: transparent !important;
-        }
-        /* ================================
-           FINAL DARK THEME FIX PACKAGE
-           Selectbox, Input, Dropdown, Button
-           ================================ */
-        
-        /* SELECTBOX ana kutu */
-        div[data-baseweb="select"] > div {
-            background-color: #0f172a !important; /* dark navy */
-            border: 1px solid #334155 !important; /* soft slate border */
-            color: #e5e7eb !important;
-        }
-        
-        /* SELECTBOX iç yazı */
-        div[data-baseweb="select"] * {
-            color: #e5e7eb !important;
-        }
-        
-        /* SELECTBOX placeholder */
-        div[data-baseweb="select"] div[data-baseweb="select"] span {
-            color: #94a3b8 !important; /* gray-400 */
-        }
-        
-        /* SELECTBOX hover border */
-        div[data-baseweb="select"] > div:hover {
-            border: 1px solid #9fffcba0 !important; /* soft mint glow */
-        }
-        
-        /* DROPDOWN liste arka planı */
-        ul[role="listbox"] {
-            background-color: #0f172a !important;
-            border: 1px solid #334155 !important;
-        }
-        
-        /* DROPDOWN listedeki her item */
-        ul[role="listbox"] li {
-            background-color: #0f172a !important;
-            color: #e5e7eb !important;
-        }
-        
-        /* DROPDOWN hover (çok önemli) */
-        ul[role="listbox"] li:hover {
-            background-color: #1e293b !important;
-            color: #9FFFCB !important;
-        }
-        
-        /* INPUT alanları */
-        input, textarea {
-            background-color: #0f172a !important;
-            border: 1px solid #334155 !important;
-            color: #e5e7eb !important;
-        }
-        
-        /* INPUT hover */
-        input:hover, textarea:hover {
-            border: 1px solid #9fffcba0 !important;
-        }
-        
-        /* INPUT placeholder */
-        input::placeholder {
-            color: #94a3b8 !important;
-            opacity: 1 !important;
-        }
-        
-        /* BUTTON (primary) */
-        .stButton button, div.stButton > button {
-            background: linear-gradient(90deg, #9FFFCB, #86efac) !important;
-            color: #0f172a !important;
-            font-weight: 700 !important;
-            border-radius: 8px !important;
-            border: none !important;
-            padding: 0.6rem 1.2rem !important;
-        }
-        
-        /* BUTTON hover */
-        .stButton button:hover {
-            background: linear-gradient(90deg, #befee0, #a9f5c2) !important;
-            color: #020617 !important;
-        }
-        
-        /* BUTTON disabled fix */
-        button:disabled {
-            opacity: 0.5 !important;
-            background-color: #334155 !important;
-            color: #94a3b8 !important;
-        }
-        /* ==== DARK THEME MASTER CSS ==== */
-       
-
-        /* Ana arka plan */
-        body, [data-testid="stAppViewContainer"] {
-            background: radial-gradient(circle at top left,#020617 0,#0b1120 45%,#020617 100%) !important;
-            color: #E5E7EB !important;
-        }
-    
-        /* Sidebar */
-        section[data-testid="stSidebar"] {
-            background: #0b1120 !important;
-            color: #E5E7EB !important;
-        }
-    
-        /* Dashboard Header */
-        .main-header-box {
-            background: rgba(15,23,42,0.75);
-            border: 1px solid #1e293b;
-            padding: 25px 35px;
-            border-radius: 18px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.45);
-        }
-        .main-header-title {
-            font-size: 40px !important;
-            font-weight: 800 !important;
-            color: #9FFFCB !important;
-        }
-        .main-header-sub {
-            color: #cbd5e1 !important;
-            font-size: 17px !important;
-        }
-    
-        /* Genel yazılar */
-        p, span, label, div {
-            color: #E5E7EB !important;
-        }
-    
-        /* Section başlıkları */
-        h2, h3, h4 {
-            color: #9FFFCB !important !important;
-        }
-    
-        /* Selectbox */
-        div[data-baseweb="select"] * {
-            color: #E5E7EB !important;
-        }
-        ul[role="listbox"] li * {
-            color: #E5E7EB !important;
-        }
-    
-        /* Input */
-        input, textarea {
-            color: #E5E7EB !important;
-            background: #0f172a !important;
-            border: 1px solid #334155 !important;
-        }
-    
-        /* KPI Kartları */
-        .kpi-card {
-            background: rgba(15,23,42,0.96) !important;
-            border: 1px solid #1e293b !important;
-            color:#e5e7eb !important;
-            box-shadow: 0 18px 40px rgba(15,23,42,0.85) !important;
-        }
-    
-        /* Tabs */
-        .stTabs [data-baseweb="tab"] p { color: #E5E7EB !important; }
-        .stTabs [aria-selected="true"] p {
-            color: #9FFFCB !important;
-            font-weight: 700 !important;
-        }
-    
-        /* Button → Dark & Light common mint */
-        .stButton button {
-            background: #10b981 !important;
-            color: #0A0F1E !important;
-            font-weight: 800 !important;
-            border-radius: 10px !important;
-            border: none !important;
-            box-shadow: 0 4px 14px rgba(16,185,129,0.35) !important;
-            padding: 0.55rem 1.3rem !important;
-            transition: 0.2s !important;
-        }
-        .stButton button:hover {
-            background: #34d399 !important;
-            transform: translateY(-2px);
-        }
-        /* === DROPDOWN HOVER FIX (Dark Mode) === */
-
-        /* Hover edilen item -> siyah yazı */
-        ul[role="listbox"] li:hover * {
-            color: #000000 !important;
-        }
-        
-        /* Normal liste item yazısı -> beyaz (kalsın) */
-        ul[role="listbox"] li * {
-            color: #E5E7EB !important;
-        }
-        
-        /* Seçili item (input içinde olan) -> beyaz */
-        div[data-baseweb="select"] span {
-            color: #E5E7EB !important;
-        }
-
-        </style>
-        """
-
-    else:
-        css = """
-        <style>
-
-        header, .ea3mdgi4 {
-            background: transparent !important;
-            height: 0px !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-
-        body, [data-testid="stAppViewContainer"] {
-            background: linear-gradient(to bottom,#f9fafb,#e5e7eb) !important;
-            color: #111827 !important;
-        }
-
-        section[data-testid="stSidebar"] {
-            background: linear-gradient(to bottom,#f1f5f9,#e5e7eb) !important;
-        }
-
+        /* ===========================================
+           HEADER BANNER
+        ============================================*/
         .app-header-banner {
             width: 100%;
             padding: 1.4rem 1.8rem;
             border-radius: 1.1rem;
-            background: rgba(255,255,255,0.88);
-            border: 1px solid rgba(209,213,219,0.9);
-            box-shadow: 0 18px 45px rgba(148,163,184,0.45);
+
+            background: rgba(15,23,42,0.55);
+            backdrop-filter: blur(14px);
+
+            border: 1px solid rgba(148,163,184,0.25);
+            box-shadow: 0 18px 45px rgba(15,23,42,0.85);
+
             display: flex;
             align-items: center;
             margin-bottom: 1.4rem;
@@ -522,104 +209,191 @@ def inject_css(theme: str):
         .app-title {
             font-size: 2.35rem !important;
             font-weight: 900 !important;
-            color: #047857 !important;  /* koyu yeşil */
+            letter-spacing: -0.03em;
+            color: #9FFFCB !important;
         }
 
         .app-subtitle {
             font-size: 1.05rem !important;
-            color: #374151 !important;
+            color: #d8dee9 !important;
+            opacity: 0.95 !important;
         }
 
-        h2 {
-            font-size: 26px !important;
-            font-weight: 800 !important;
+        /* ===========================================
+           TABS
+        ============================================*/
+        .stTabs [data-baseweb="tab"] p {
+            color: #E5E7EB !important;
         }
-
-        .stButton > button {
-            background-color: #10b981 !important;
-            color: white !important;
-            font-weight: 800 !important;
-        }
-               /* ==== LIGHT THEME MASTER CSS ==== */
-    
-        body, [data-testid="stAppViewContainer"] {
-            background: linear-gradient(to bottom,#f9fafb,#e5e7eb) !important;
-            color: #1e293b !important;
-        }
-    
-        /* Sidebar */
-        section[data-testid="stSidebar"] {
-            background: #ffffff !important;
-            color:#1e293b !important;
-            border-right: 1px solid #e2e8f0 !important;
-        }
-    
-        /* Dashboard Header */
-        .main-header-box {
-            background: #ffffff !important;
-            border: 1px solid #e2e8f0 !important;
-            padding: 25px 35px;
-            border-radius: 18px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-        }
-        .main-header-title {
-            font-size: 40px !important;
-            font-weight: 800 !important;
-            color: #047857 !important;
-        }
-        .main-header-sub {
-            color: #475569 !important;
-            font-size: 17px !important;
-        }
-    
-        /* Section başlıkları */
-        h2, h3, h4 {
-            color: #047857 !important;
-        }
-    
-        /* Input - Selectbox */
-        div[data-baseweb="select"] * {
-            color: #1e293b !important;
-        }
-        input, textarea {
-            color: #1e293b !important;
-            background: #ffffff !important;
-            border: 1px solid #cbd5e1 !important;
-        }
-    
-        /* KPI Kartları */
-        .kpi-card {
-            background: #ffffff !important;
-            border: 1px solid #e2e8f0 !important;
-            color:#1e293b !important;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.07) !important;
-        }
-    
-        /* Tabs */
-        .stTabs [data-baseweb="tab"] p { color: #1e293b !important; }
         .stTabs [aria-selected="true"] p {
-            color: #047857 !important;
+            color: #9FFFCB !important;
             font-weight: 700 !important;
         }
-    
-        /* Button → Dark & Light common mint */
+
+        /* ===========================================
+           PRIME BUTTON
+        ============================================*/
         .stButton button {
             background: #10b981 !important;
             color: #0A0F1E !important;
             font-weight: 800 !important;
             border-radius: 10px !important;
             border: none !important;
-            box-shadow: 0 4px 14px rgba(16,185,129,0.35) !important;
             padding: 0.55rem 1.3rem !important;
-            transition: 0.2s !important;
+            transition: 0.15s !important;
+            box-shadow: 0 4px 14px rgba(16,185,129,0.35) !important;
         }
         .stButton button:hover {
             background: #34d399 !important;
             transform: translateY(-2px);
         }
+
+        /* ===========================================
+           SELECTBOX (Arka plan dark navy)
+           DROPDOWN → GRİ ARKA PLAN & HOVER → SİYAH YAZI
+        ============================================*/
+        /* Ana kutu */
+        div[data-baseweb="select"] > div {
+            background-color: #0f172a !important;
+            border: 1px solid #334155 !important;
+        }
+        div[data-baseweb="select"] * {
+            color: #E5E7EB !important;
+        }
+
+        /* Dropdown list */
+        ul[role="listbox"] {
+            background-color: #f1f5f9 !important;   /* GRİ */
+            border: 1px solid #cbd5e1 !important;
+        }
+
+        ul[role="listbox"] li {
+            background-color: #f1f5f9 !important;
+            color: #1e293b !important;
+        }
+
+        /* HOVER → siyah yazı */
+        ul[role="listbox"] li:hover {
+            background-color: #e2e8f0 !important;
+            color: #000000 !important;
+        }
+        ul[role="listbox"] li:hover * {
+            color: #000000 !important;
+        }
+
+        /* Input */
+        input, textarea {
+            background-color: #0f172a !important;
+            border: 1px solid #334155 !important;
+            color: #E5E7EB !important;
+        }
+        input::placeholder {
+            color: #94a3b8 !important;
+        }
+
+        </style>
+        """
+    else:
+        css = """
+        <style>
+
+        /* ===========================================
+           LIGHT MODE BASE
+        ============================================*/
+        body, [data-testid="stAppViewContainer"] {
+            background: linear-gradient(to bottom,#f9fafb,#e5e7eb) !important;
+            color: #1e293b !important;
+        }
+
+        section[data-testid="stSidebar"] {
+            background: #ffffff !important;
+            border-right: 1px solid #e2e8f0 !important;
+        }
+
+        /* ===========================================
+           PALANTIR LIGHT GLASS KPI CARD
+        ============================================*/
+        .kpi-card {
+            border-radius: 15px !important;
+            padding: 20px 25px !important;
+
+            background: rgba(255,255,255,0.65) !important; 
+            backdrop-filter: blur(8px) !important;
+
+            border: 1px solid rgba(0,0,0,0.08) !important;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.09) !important;
+
+            color:#1e293b !important;
+        }
+
+        .kpi-card .value {
+            font-size: 26px !important;
+            font-weight: 800 !important;
+        }
+
+        /* ===========================================
+           HEADER BANNER (LIGHT GLASS)
+        ============================================*/
+        .app-header-banner {
+            background: rgba(255,255,255,0.85);
+            border: 1px solid rgba(209,213,219,0.8);
+            box-shadow: 0 18px 45px rgba(148,163,184,0.35);
+            backdrop-filter: blur(8px);
+        }
+
+        .app-title {
+            color: #047857 !important;
+        }
+
+        .app-subtitle {
+            color: #475569 !important;
+        }
+
+        /* ===========================================
+           BUTTONS (mint)
+        ============================================*/
+        .stButton button {
+            background: #10b981 !important;
+            color: white !important;
+            font-weight: 800 !important;
+            border-radius: 10px !important;
+            border: none !important;
+        }
+        .stButton button:hover {
+            background: #34d399 !important;
+        }
+
+        /* ===========================================
+           SELECTBOX
+           (Light mode + gri dropdown + hover siyah yazı)
+        ============================================*/
+        div[data-baseweb="select"] > div {
+            background-color: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+        }
+        div[data-baseweb="select"] * {
+            color: #1e293b !important;
+        }
+
+        ul[role="listbox"] {
+            background-color: #f1f5f9 !important;
+            border: 1px solid #cbd5e1 !important;
+        }
+        ul[role="listbox"] li {
+            color: #1e293b !important;
+        }
+        ul[role="listbox"] li:hover {
+            background-color: #e2e8f0 !important;
+            color: #000000 !important;
+        }
+        ul[role="listbox"] li:hover * {
+            color: #000000 !important;
+        }
+
         </style>
         """
     st.markdown(css, unsafe_allow_html=True)
+
 # =========================================================
 # KPI GRID LAYOUT (Palantir responsive)
 # =========================================================
