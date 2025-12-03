@@ -356,6 +356,7 @@ def inject_css(theme: str):
         div[data-baseweb="select"] * {
             color: #E5E7EB !important;
         }
+               * DROPDOWN CUSTOMIZATION */
         ul[role="listbox"] {
             background: rgba(15,23,42,0.98) !important;
             border-radius: 12px !important;
@@ -365,7 +366,7 @@ def inject_css(theme: str):
             background: transparent !important;
         }
         ul[role="listbox"] li * {
-            color: #000000 !important;
+            color: #E5E7EB !important;
         }
         ul[role="listbox"] li:hover {
             background: #22c55e !important;
@@ -373,10 +374,14 @@ def inject_css(theme: str):
         ul[role="listbox"] li:hover * {
             color: #020617 !important;
         }
-        ul[role="listbox"] {
+        
+        /* OVERLAY FIX — BUNU BURAYA EKLEDİN ✔ */
+        div[data-testid="stSelectbox"] > div[style*="absolute"] {
+            background: transparent !important;
+            opacity: 0 !important;
             backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
         }
+
         /* Slider */
         .stSlider > div[data-baseweb="slider"] > div > div {
             background: #1e293b !important;
