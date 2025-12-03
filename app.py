@@ -766,15 +766,15 @@ selected_categories = st.session_state.selected_categories
 # SIDEBAR
 # =========================================================
 with st.sidebar:
+    st.markdown(f"### 🧭 {t('sidebar_control', lang)}")
     # Language selection first (label sabit)
     lang_choice = st.radio(
-        "Dil / Language",
+        "Dil",
         options=list(LANG_MAP.keys()),
         index=0,
     )
     lang = LANG_MAP[lang_choice]
 
-    st.markdown(f"### 🧭 {t('sidebar_control', lang)}")
 
     theme_choice = st.radio(
         label=t("sidebar_theme", lang),
