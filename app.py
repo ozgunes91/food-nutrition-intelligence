@@ -27,14 +27,14 @@ LANG_MAP = {"Türkçe": "tr", "English": "en"}
 
 TEXT = {
     "app_title": {
-        "tr": "Food Nutrition Intelligence – Besin Zekâ Paneli",
+        "tr": "Food Nutrition Intelligence – Besin Zekâsı Paneli",
         "en": "Food Nutrition Intelligence – Nutrition Intelligence Panel",
     },
     "subtitle": {
         "tr": "150+ günlük gıdanın kalori ve besin değerlerini keşfet, modelle, kümele ve öner.",
         "en": "Explore, model, cluster and recommend using nutrition profiles of 150+ everyday foods.",
     },
-    "sidebar_language": {"tr": "Dil / Language", "en": "Language"},
+    "sidebar_language": {"tr": "Dil ", "en": "Language"},
     "sidebar_theme": {"tr": "Tema", "en": "Theme"},
     "theme_dark": {"tr": "Karanlık", "en": "Dark"},
     "theme_light": {"tr": "Aydınlık", "en": "Light"},
@@ -365,7 +365,7 @@ def inject_css(theme: str):
             background: transparent !important;
         }
         ul[role="listbox"] li * {
-            color: #E5E7EB !important;
+            color: #000000 !important;
         }
         ul[role="listbox"] li:hover {
             background: #22c55e !important;
