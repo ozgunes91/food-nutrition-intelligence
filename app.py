@@ -141,7 +141,6 @@ def inject_css(theme: str):
     if theme == "Dark":
         css = """
         <style>
-
         /* === GLOBAL DARK BACKGROUND === */
         body, [data-testid="stAppViewContainer"] {
             background: radial-gradient(circle at top left,#0a0f1e 0%,#111827 45%,#0a0f1e 100%) !important;
@@ -160,27 +159,70 @@ def inject_css(theme: str):
         }
 
         .stSidebar h1, .stSidebar h2, .stSidebar h3 {
-            color: #A8FFBF !important;   /* FISTIK YEŞİLİ BAŞLIK */
+            color: #9FFFCB !important;   /* mint */
             font-weight: 700 !important;
         }
 
         /* Sidebar label’lar */
         .stRadio label, .stSlider label, .stSelectbox label, 
         .stMultiSelect label {
-            color: #c8d3e0 !important;
+            color: #e2e8f0 !important;
             font-weight: 600;
         }
 
-        /* === ANA BAŞLIKLAR (FISTIK YEŞİLİ) === */
+        /* === ANA BAŞLIKLAR (SOFT MINT) === */
         h1, h2, h3, h4 {
-            color: #A8FFBF !important;
+            color: #7EE0B5 !important;   /* dashboard isminden bir ton daha soft */
             font-weight: 800 !important;
             letter-spacing: -0.5px;
         }
 
         /* Açıklama metinleri */
-        p, label, span, div, .markdown-text-container {
+        p, label, span, .markdown-text-container {
             color: #dbe3ed !important;
+        }
+
+        /* === HEADER BANNER === */
+        .app-header-banner {
+            width: 100%;
+            margin: 0 0 1.2rem 0;
+            padding: 1.1rem 1.4rem;
+            border-radius: 0.9rem;
+            background: rgba(15,23,42,0.78);
+            border: 1px solid rgba(148,163,184,0.35);
+            box-shadow: 0 18px 45px rgba(15,23,42,0.85);
+            display: flex;
+            align-items: center;
+        }
+
+        .app-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+        }
+
+        .app-logo {
+            font-size: 1.9rem;
+            filter: drop-shadow(0 0 10px rgba(159,255,203,0.45));
+        }
+
+        .app-header-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+
+        .app-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #9FFFCB; /* en parlak mint sadece başlıkta */
+        }
+
+        .app-subtitle {
+            font-size: 0.93rem;
+            color: #e5e7eb;
+            opacity: 0.9;
         }
 
         /* === TABS === */
@@ -190,19 +232,19 @@ def inject_css(theme: str):
         }
 
         .stTabs [data-baseweb="tab"]:hover {
-            color: #A8FFBF !important;
+            color: #9FFFCB !important;
         }
 
         /* AKTİF TAB ALT ÇİZGİ */
         .stTabs [aria-selected="true"] {
-            color: #A8FFBF !important;
+            color: #9FFFCB !important;
             font-weight: 700 !important;
-            border-bottom: 3px solid #A8FFBF !important;
+            border-bottom: 3px solid #9FFFCB !important;
         }
 
         /* === KPI CARDS === */
         .kpi-card {
-            background: rgba(17,24,39,0.85) !important;
+            background: rgba(17,24,39,0.9) !important;
             border: 1px solid #1f2937 !important;
             border-radius: 1rem;
             padding: 1.2rem 1.4rem;
@@ -213,7 +255,7 @@ def inject_css(theme: str):
         .kpi-value { color: #ffffff !important; }
         .kpi-sub   { color: #c7d3df !important; }
 
-        /* === INPUT / SELECT === */
+        /* === INPUT / NUMBER === */
         .stTextInput input,
         .stNumberInput input {
             background-color: #f9fafb !important;
@@ -221,7 +263,7 @@ def inject_css(theme: str):
             border-radius: 6px !important;
         }
 
-        /* === SELECTBOX / DROPDOWN === */
+        /* === SELECTBOX / MULTISELECT DROPDOWN === */
         div[data-baseweb="select"] > div {
             background-color: #0f172a !important;
             color: #e2e8f0 !important;
@@ -236,30 +278,29 @@ def inject_css(theme: str):
 
         ul[role="listbox"] li:hover {
             background-color: #1e293b !important;
-            color: #A8FFBF !important;   /* FISTIK YEŞİLİ HOVER */
+            color: #9FFFCB !important;   /* mint hover */
         }
 
         div[data-baseweb="select"] svg {
-            color: #A8FFBF !important;
+            color: #9FFFCB !important;
         }
 
         /* === BUTTONS === */
         .stButton button, button[kind="primary"] {
-            background-color: #A8FFBF !important;
-            color: #0a0f1e !important;
+            background-color: #9FFFCB !important;
+            color: #052e16 !important;
             font-weight: 800 !important;
             border-radius: 6px !important;
             border: none !important;
         }
 
         .stButton button:hover, button[kind="primary"]:hover {
-            background-color: #7AFFA5 !important; /* bir tık koyu */
-            color: #000 !important;
+            background-color: #7AEFB2 !important;
+            color: #022c22 !important;
         }
 
         </style>
         """
-
     else:
         css = """
         <style>
@@ -293,15 +334,48 @@ def inject_css(theme: str):
             font-size: 0.8rem;
             color:#9ca3af;
         }
-        /* Yalnızca Türkçe / English / All / High Protein / Low Carb / Low Fat yazılarını beyaz yap */
-        .stRadio label {
-            color: #ffffff !important;   /* bembeyaz */
-            font-weight: 600 !important; /* net dursun */
+        /* Light mode header banner */
+        .app-header-banner {
+            width: 100%;
+            margin: 0 0 1.2rem 0;
+            padding: 1.1rem 1.4rem;
+            border-radius: 0.9rem;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid rgba(209,213,219,0.9);
+            box-shadow: 0 18px 45px rgba(148,163,184,0.45);
+            display: flex;
+            align-items: center;
         }
-
+        .app-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+        }
+        .app-logo {
+            font-size: 1.9rem;
+        }
+        .app-header-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+        .app-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #047857; /* koyu yeşil */
+        }
+        .app-subtitle {
+            font-size: 0.93rem;
+            color: #374151;
+        }
+        /* Radio label'lar (Türkçe / English / focus) siyah olsun */
+        .stRadio label {
+            color: #111827 !important;
+            font-weight: 600 !important;
+        }
         </style>
         """
-
     st.markdown(css, unsafe_allow_html=True)
 
 
@@ -551,11 +625,22 @@ elif focus == t("focus_low_fat", lang):
     filtered_df = filtered_df.sort_values("fat", ascending=True)
 
 # =========================================================
-# HEADER
+# HEADER – 🍏 BANNER
 # =========================================================
-st.markdown(f"## {t('app_title', lang)}")
-st.markdown(t("subtitle", lang))
-st.markdown("")
+st.markdown(
+    f"""
+    <div class="app-header-banner">
+        <div class="app-header-left">
+            <span class="app-logo">🍏</span>
+            <div class="app-header-text">
+                <div class="app-title">{t('app_title', lang)}</div>
+                <div class="app-subtitle">{t('subtitle', lang)}</div>
+            </div>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 # Tabs
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
@@ -907,7 +992,7 @@ with tab5:
         smart_df = smart_df.sort_values(
             ["iron", "health_score"],
             ascending=[False, False]
-    )
+        )
     elif mode == t("smart_vitc", lang):
         smart_df["vitc_density"] = smart_df["vitamin_c"] / smart_df["calories"]
         smart_df = smart_df.dropna(subset=["vitc_density"])
