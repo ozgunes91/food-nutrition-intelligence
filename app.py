@@ -379,6 +379,94 @@ def inject_css(theme: str):
             background-color: #334155 !important;
             color: #94a3b8 !important;
         }
+        /* ==== DARK THEME MASTER CSS ==== */
+        /* ==== DARK THEME MASTER CSS ==== */
+
+        /* Ana arka plan */
+        body, [data-testid="stAppViewContainer"] {
+            background: radial-gradient(circle at top left,#020617 0,#0b1120 45%,#020617 100%) !important;
+            color: #E5E7EB !important;
+        }
+    
+        /* Sidebar */
+        section[data-testid="stSidebar"] {
+            background: #0b1120 !important;
+            color: #E5E7EB !important;
+        }
+    
+        /* Dashboard Header */
+        .main-header-box {
+            background: rgba(15,23,42,0.75);
+            border: 1px solid #1e293b;
+            padding: 25px 35px;
+            border-radius: 18px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+        }
+        .main-header-title {
+            font-size: 40px !important;
+            font-weight: 800 !important;
+            color: #9FFFCB !important;
+        }
+        .main-header-sub {
+            color: #cbd5e1 !important;
+            font-size: 17px !important;
+        }
+    
+        /* Genel yazılar */
+        p, span, label, div {
+            color: #E5E7EB !important;
+        }
+    
+        /* Section başlıkları */
+        h2, h3, h4 {
+            color: #9FFFCB !important !important;
+        }
+    
+        /* Selectbox */
+        div[data-baseweb="select"] * {
+            color: #E5E7EB !important;
+        }
+        ul[role="listbox"] li * {
+            color: #E5E7EB !important;
+        }
+    
+        /* Input */
+        input, textarea {
+            color: #E5E7EB !important;
+            background: #0f172a !important;
+            border: 1px solid #334155 !important;
+        }
+    
+        /* KPI Kartları */
+        .kpi-card {
+            background: rgba(15,23,42,0.96) !important;
+            border: 1px solid #1e293b !important;
+            color:#e5e7eb !important;
+            box-shadow: 0 18px 40px rgba(15,23,42,0.85) !important;
+        }
+    
+        /* Tabs */
+        .stTabs [data-baseweb="tab"] p { color: #E5E7EB !important; }
+        .stTabs [aria-selected="true"] p {
+            color: #9FFFCB !important;
+            font-weight: 700 !important;
+        }
+    
+        /* Button → Dark & Light common mint */
+        .stButton button {
+            background: #10b981 !important;
+            color: #0A0F1E !important;
+            font-weight: 800 !important;
+            border-radius: 10px !important;
+            border: none !important;
+            box-shadow: 0 4px 14px rgba(16,185,129,0.35) !important;
+            padding: 0.55rem 1.3rem !important;
+            transition: 0.2s !important;
+        }
+        .stButton button:hover {
+            background: #34d399 !important;
+            transform: translateY(-2px);
+        }
 
         </style>
         """
@@ -436,7 +524,83 @@ def inject_css(theme: str):
             color: white !important;
             font-weight: 800 !important;
         }
-
+               /* ==== LIGHT THEME MASTER CSS ==== */
+    
+        body, [data-testid="stAppViewContainer"] {
+            background: linear-gradient(to bottom,#f9fafb,#e5e7eb) !important;
+            color: #1e293b !important;
+        }
+    
+        /* Sidebar */
+        section[data-testid="stSidebar"] {
+            background: #ffffff !important;
+            color:#1e293b !important;
+            border-right: 1px solid #e2e8f0 !important;
+        }
+    
+        /* Dashboard Header */
+        .main-header-box {
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            padding: 25px 35px;
+            border-radius: 18px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+        .main-header-title {
+            font-size: 40px !important;
+            font-weight: 800 !important;
+            color: #047857 !important;
+        }
+        .main-header-sub {
+            color: #475569 !important;
+            font-size: 17px !important;
+        }
+    
+        /* Section başlıkları */
+        h2, h3, h4 {
+            color: #047857 !important;
+        }
+    
+        /* Input - Selectbox */
+        div[data-baseweb="select"] * {
+            color: #1e293b !important;
+        }
+        input, textarea {
+            color: #1e293b !important;
+            background: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+        }
+    
+        /* KPI Kartları */
+        .kpi-card {
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            color:#1e293b !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.07) !important;
+        }
+    
+        /* Tabs */
+        .stTabs [data-baseweb="tab"] p { color: #1e293b !important; }
+        .stTabs [aria-selected="true"] p {
+            color: #047857 !important;
+            font-weight: 700 !important;
+        }
+    
+        /* Button → Dark & Light common mint */
+        .stButton button {
+            background: #10b981 !important;
+            color: #0A0F1E !important;
+            font-weight: 800 !important;
+            border-radius: 10px !important;
+            border: none !important;
+            box-shadow: 0 4px 14px rgba(16,185,129,0.35) !important;
+            padding: 0.55rem 1.3rem !important;
+            transition: 0.2s !important;
+        }
+        .stButton button:hover {
+            background: #34d399 !important;
+            transform: translateY(-2px);
+        }
         </style>
         """
     st.markdown(css, unsafe_allow_html=True)
