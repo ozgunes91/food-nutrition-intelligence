@@ -138,7 +138,6 @@ def nl(col: str, lang: str) -> str:
 # THEME / CSS (Palantir-ish)
 # =========================================================
 def inject_css(theme: str):
-    def inject_css(theme: str):
     if theme == "Dark":
         css = """
         <style>
