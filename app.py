@@ -236,6 +236,64 @@ def inject_css(theme: str):
             color: #f4f4f7 !important;
             opacity: 1 !important;
         }
+        /* === GENEL GLOBAL RENGİ KESİN DÜZELTEN KOD === */
+
+        /* Ana metin ( gri olan her şey ) */
+        html, body, [data-testid="stAppViewContainer"], p, span, label, div, h1, h2, h3, h4, h5 {
+            color: #E5E7EB !important;
+        }
+        
+        /* Selectbox iç yazı ve placeholder */
+        div[data-baseweb="select"] * {
+            color: #E5E7EB !important;
+        }
+        
+        /* Selectbox dropdown içi */
+        ul[role="listbox"] li * {
+            color: #E5E7EB !important;
+        }
+        
+        /* Selectbox hovered item */
+        ul[role="listbox"] li:hover * {
+            color: #9FFFCB !important; /* mint hover */
+        }
+        
+        /* Input içi yazı */
+        input, textarea {
+            color: #E5E7EB !important;
+        }
+        
+        /* Input placeholder (çok gizli bir selector) */
+        input::placeholder {
+            color: #CBD5E1 !important;
+            opacity: 1 !important;
+        }
+        
+        /* Tab başlıkları gri kalıyordu → düzeltme */
+        .stTabs [data-baseweb="tab"] p {
+            color: #E5E7EB !important;
+        }
+        
+        .stTabs [aria-selected="true"] p {
+            color: #9FFFCB !important;
+            font-weight: 700 !important;
+        }
+        
+        /* Section başlığı hala koyu gri kalıyordu → FIX */
+        h3, h4, h5 {
+            color: #9FFFCB !important;
+        }
+        
+        /* Button text kesin siyah olsun */
+        .stButton button, button[kind="primary"], div.stButton > button {
+            color: #0a0f1e !important;
+            font-weight: 800 !important;
+        }
+        
+        /* Light moddaki beyaz tavan FIX */
+        header[data-testid="stHeader"] {
+            background: transparent !important;
+        }
 
         </style>
         """
