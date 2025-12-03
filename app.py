@@ -151,7 +151,7 @@ def inject_css(theme: str):
             color: #e5e7eb !important;
         }
 
-        /* ÜSTTEKİ BEYAZ BOŞLUK GİTSİN */
+        /* HEADER boşluğu kaldır */
         header, .ea3mdgi4 {
             background: transparent !important;
         }
@@ -163,27 +163,23 @@ def inject_css(theme: str):
         }
 
         .stSidebar h1, .stSidebar h2, .stSidebar h3 {
-            color: #9FFFCB !important;   /* mint */
+            color: #9FFFCB !important;
             font-weight: 700 !important;
         }
-                /* DASHBOARD ANA BAŞLIK BOYUTU */
-        h2 {
-            font-size: 36px !important;   /* büyüt -> istersen 40px yaparız */
+
+        /* === DASHBOARD ANA BAŞLIK (##) === */
+        .stMarkdown h2 {
+            font-size: 36px !important;
             font-weight: 800 !important;
-        }
-        
-        /* Sidebar label’lar */
-        .stRadio label, .stSlider label, .stSelectbox label, 
-        .stMultiSelect label {
-            color: #e2e8f0 !important;
-            font-weight: 600;
+            letter-spacing: -0.5px !important;
+            color: #9FFFCB !important;
         }
 
-        /* === ANA BAŞLIKLAR (SOFT MINT) === */
-        h1, h2, h3, h4 {
-            color: #7EE0B5 !important;   /* dashboard isminden bir ton daha soft */
-            font-weight: 800 !important;
-            letter-spacing: -0.5px;
+        /* === SECTION BAŞLIKLARI (####) === */
+        .stMarkdown h4 {
+            font-size: 20px !important;
+            font-weight: 700 !important;
+            color: #7EE0B5 !important;
         }
 
         /* Açıklama metinleri */
@@ -194,7 +190,7 @@ def inject_css(theme: str):
         /* === HEADER BANNER === */
         .app-header-banner {
             width: 100%;
-            margin: 0 0 1.2rem 0;
+            margin-bottom: 1.2rem;
             padding: 1.1rem 1.4rem;
             border-radius: 0.9rem;
             background: rgba(15,23,42,0.78);
@@ -203,31 +199,14 @@ def inject_css(theme: str):
             display: flex;
             align-items: center;
         }
-
-        .app-header-left {
-            display: flex;
-            align-items: center;
-            gap: 0.9rem;
-        }
-
-        .app-logo {
-            font-size: 1.9rem;
-            filter: drop-shadow(0 0 10px rgba(159,255,203,0.45));
-        }
-
-        .app-header-text {
-            display: flex;
-            flex-direction: column;
-            gap: 0.15rem;
-        }
-
+        .app-header-left { display: flex; align-items: center; gap: 0.9rem; }
+        .app-logo { font-size: 1.9rem; filter: drop-shadow(0 0 10px rgba(159,255,203,0.45)); }
         .app-title {
             font-size: 1.3rem;
             font-weight: 800;
             letter-spacing: -0.03em;
-            color: #9FFFCB; /* en parlak mint sadece başlıkta */
+            color: #9FFFCB;
         }
-
         .app-subtitle {
             font-size: 0.93rem;
             color: #e5e7eb;
@@ -239,12 +218,9 @@ def inject_css(theme: str):
             color: #b7c2cf !important;
             font-weight: 500;
         }
-
         .stTabs [data-baseweb="tab"]:hover {
             color: #9FFFCB !important;
         }
-
-        /* AKTİF TAB ALT ÇİZGİ */
         .stTabs [aria-selected="true"] {
             color: #9FFFCB !important;
             font-weight: 700 !important;
@@ -259,12 +235,11 @@ def inject_css(theme: str):
             padding: 1.2rem 1.4rem;
             box-shadow: 0 22px 50px rgba(0,0,0,0.55);
         }
-
         .kpi-label { color: #9dbad5 !important; }
         .kpi-value { color: #ffffff !important; }
         .kpi-sub   { color: #c7d3df !important; }
 
-        /* === INPUT / NUMBER === */
+        /* === INPUTS === */
         .stTextInput input,
         .stNumberInput input {
             background-color: #f9fafb !important;
@@ -272,52 +247,47 @@ def inject_css(theme: str):
             border-radius: 6px !important;
         }
 
-        /* === SELECTBOX / MULTISELECT DROPDOWN === */
+        /* === SELECTBOX === */
         div[data-baseweb="select"] > div {
             background-color: #0f172a !important;
             color: #e2e8f0 !important;
             border: 1px solid #334155 !important;
         }
-
         ul[role="listbox"] {
             background-color: #0f172a !important;
             color: #e2e8f0 !important;
             border: 1px solid #334155 !important;
         }
-
         ul[role="listbox"] li:hover {
             background-color: #1e293b !important;
-            color: #9FFFCB !important;   /* mint hover */
-        }
-
-        div[data-baseweb="select"] svg {
             color: #9FFFCB !important;
         }
+        div[data-baseweb="select"] svg { color: #9FFFCB !important; }
 
         /* === BUTTONS === */
-        .stButton button, button[kind="primary"] {
+        .stButton > button {
             background-color: #9FFFCB !important;
-            color: #111827 !important;
+            color: #0a0f1e !important;
             font-weight: 800 !important;
             border-radius: 6px !important;
             border: none !important;
         }
-
-        .stButton button:hover, button[kind="primary"]:hover {
+        .stButton > button:hover {
             background-color: #7AEFB2 !important;
             color: #022c22 !important;
         }
-        
-        /* Plotly chart title küçültme */
-        .js-plotly-plot .plotly .gtitle {
+
+        /* === PLOTLY TITLE FIX === */
+        .js-plotly-plot .gtitle {
             font-size: 18px !important;
             font-weight: 600 !important;
         }
-                /* --- KOYU MOD BUTON YAZI RENGİ FIX --- */
-        .stButton button, button[kind="primary"], div.stButton > button {
-            color: #0a0f1e !important;     /* siyah */
-            font-weight: 700 !important;
+
+        /* INFO / WARNING / CAPTION renk düzeltme */
+        .stAlert, .stCaption, .stMarkdown p {
+            color: #dbe3ed !important;
         }
+
         </style>
         """
     else:
@@ -327,10 +297,26 @@ def inject_css(theme: str):
             background: linear-gradient(to bottom,#f9fafb,#e5e7eb) !important;
             color: #111827 !important;
         }
+
         section[data-testid="stSidebar"] {
             background: linear-gradient(to bottom,#f9fafb,#e5e7eb) !important;
             color:#111827 !important;
         }
+
+        /* Dashboard h2 */
+        .stMarkdown h2 {
+            font-size: 34px !important;
+            font-weight: 800 !important;
+            color: #047857 !important;
+        }
+
+        /* Section h4 */
+        .stMarkdown h4 {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            color: #065f46 !important;
+        }
+
         .kpi-card {
             background: rgba(255,255,255,0.96);
             border: 1px solid #e5e7eb;
@@ -339,69 +325,43 @@ def inject_css(theme: str):
             box-shadow: 0 14px 30px rgba(148,163,184,0.35);
             color:#111827;
         }
+
         .kpi-label {
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.08em;
             color:#6b7280;
         }
-        .kpi-value {
-            font-size: 1.6rem;
-            font-weight: 700;
-        }
-        .kpi-sub {
-            font-size: 0.8rem;
-            color:#9ca3af;
-        }
+        .kpi-value { font-size: 1.6rem; font-weight: 700; }
+        .kpi-sub { font-size: 0.8rem; color:#9ca3af; }
+
         /* Light mode header banner */
         .app-header-banner {
-            width: 100%;
-            margin: 0 0 1.2rem 0;
-            padding: 1.1rem 1.4rem;
-            border-radius: 0.9rem;
             background: rgba(255,255,255,0.9);
             border: 1px solid rgba(209,213,219,0.9);
             box-shadow: 0 18px 45px rgba(148,163,184,0.45);
-            display: flex;
-            align-items: center;
         }
-        .app-header-left {
-            display: flex;
-            align-items: center;
-            gap: 0.9rem;
+        .app-title { color: #047857 !important; }
+
+        /* Buttons Light */
+        .stButton > button {
+            background-color: #047857 !important;
+            color: white !important;
+            font-weight: 700 !important;
         }
-        .app-logo {
-            font-size: 1.9rem;
+        .stButton > button:hover {
+            background-color: #065f46 !important;
+            color: white !important;
         }
-        .app-header-text {
-            display: flex;
-            flex-direction: column;
-            gap: 0.15rem;
-        }
-        .app-title {
-            font-size: 1.3rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            color: #047857; /* koyu yeşil */
-        }
-        .app-subtitle {
-            font-size: 0.93rem;
-            color: #374151;
-        }
-        /* Radio label'lar (Türkçe / English / focus) siyah olsun */
-        .stRadio label {
-            color: #111827 !important;
+
+        /* Plotly title */
+        .js-plotly-plot .gtitle {
+            font-size: 18px !important;
             font-weight: 600 !important;
-        }
-                /* DASHBOARD ANA BAŞLIK BOYUTU */
-        h2 {
-            font-size: 36px !important;   /* büyüt -> istersen 40px yaparız */
-            font-weight: 800 !important;
         }
         </style>
         """
     st.markdown(css, unsafe_allow_html=True)
-
 
 # =========================================================
 # DATA & HEALTH SCORE
