@@ -38,7 +38,10 @@ TEXT = {
     "sidebar_theme": {"tr": "Tema", "en": "Theme"},
     "theme_dark": {"tr": "Karanlık", "en": "Dark"},
     "theme_light": {"tr": "Aydınlık", "en": "Light"},
-    "sidebar_category": {"tr": "Kategoriler", "en": "Categories"},
+    "sidebar_select_all": {"tr": "Tümünü Seç / Kaldır", "en": "Select / Deselect All"},
+    "sidebar_categories": {"tr": "Kategoriler", "en": "Categories"},
+    "sidebar_categories_selected": {"tr": "kategori seçildi", "en": "categories selected"},
+    "sidebar_open_category_list": {"tr": "Kategori Listesini Aç", "en": "Open Category List"},
     "sidebar_calorie_range": {"tr": "Kalori aralığı (kcal)", "en": "Calorie range (kcal)"},
     "sidebar_focus": {"tr": "Besin odağı", "en": "Nutrient focus"},
     "focus_all": {"tr": "Hepsi (Genel)", "en": "All (General)"},
@@ -138,35 +141,81 @@ def inject_css(theme: str):
     if theme == "Dark":
         css = """
         <style>
+        /* === DARK MODE MASTER STYLE === */
         body, [data-testid="stAppViewContainer"] {
-            background: radial-gradient(circle at top left,#020617 0,#0b1120 45%,#020617 100%) !important;
-            color: #e5e7eb !important;
+            background: radial-gradient(circle at top left, #0a0f1e 0%, #111827 45%, #0a0f1e 100%) !important;
+            color: #f3f4f6 !important;
         }
+
         section[data-testid="stSidebar"] {
-            background: linear-gradient(to bottom,#020617,#020617) !important;
-            color:#e5e7eb !important;
+            background: linear-gradient(to bottom, #0a0f1e, #111827) !important;
+            color: #f3f4f6 !important;
         }
+
+        /* Sidebar başlıkları */
+        .stSidebar h1, .stSidebar h2, .stSidebar h3, .stSidebar h4, .stSidebar h5 {
+            color: #ffffff !important;
+        }
+
+        /* Sidebar kontrol label'ları */
+        .stSlider label, 
+        .stRadio label,
+        .stMultiSelect label,
+        .stSelectbox label {
+            color: #e5e7eb !important;
+            font-weight: 600;
+        }
+
+        /* Expander başlığı */
+        .streamlit-expanderHeader {
+            color: #e5e7eb !important;
+            font-weight: 600;
+        }
+
+        /* KPI CARDS */
         .kpi-card {
-            background: rgba(15,23,42,0.96);
-            border: 1px solid #1e293b;
+            background: rgba(17, 24, 39, 0.9);
+            border: 1px solid #1f2937;
             border-radius: 1rem;
-            padding: 1rem 1.25rem;
-            box-shadow: 0 18px 40px rgba(15,23,42,0.85);
-            color:#e5e7eb;
+            padding: 1.2rem 1.4rem;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+            color: #f9fafb !important;
         }
+
         .kpi-label {
             font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color:#9ca3af;
+            color: #cbd5e1 !important;
+            letter-spacing: 0.07em;
         }
+
         .kpi-value {
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             font-weight: 700;
+            color: #ffffff !important;
         }
+
         .kpi-sub {
-            font-size: 0.8rem;
-            color:#6b7280;
+            font-size: 0.85rem;
+            color: #d1d5db !important;
+        }
+
+        /* Tabs */
+        .stTabs [data-baseweb="tab"] {
+            color: #d1d5db !important;
+        }
+        .stTabs [data-baseweb="tab"]:hover {
+            color: #ffffff !important;
+        }
+        .stTabs [aria-selected="true"] {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            border-bottom: 3px solid #facc15 !important;
+        }
+
+        /* Dataframe header */
+        [data-testid="dataframe"] th {
+            color: #ffffff !important;
         }
         </style>
         """
@@ -205,7 +254,9 @@ def inject_css(theme: str):
         }
         </style>
         """
+
     st.markdown(css, unsafe_allow_html=True)
+
 
 # =========================================================
 # DATA & HEALTH SCORE
@@ -372,38 +423,38 @@ with st.sidebar:
     st.markdown("---")
 
 with st.sidebar:
-    st.markdown("### Kategoriler")
+    st.markdown(f"### {t('sidebar_categories', lang)}")
 
     selected_count = len(selected_categories)
     if selected_count == 0:
-        st.caption("Hiç kategori seçilmedi.")
+        st.caption(t("no_results", lang))
     else:
-        st.caption(f"**{selected_count} kategori seçildi**")
+        st.caption(f"**{selected_count} {t('sidebar_categories_selected', lang)}**")
 
     # SADECE BU EXPANDER GİZLENİYOR
-    with st.expander("Kategori Listesini Aç"):
+    with st.expander(t("sidebar_open_category_list", lang)):
         select_all = st.checkbox(
-            "Tümünü Seç / Kaldır",
+            t("sidebar_select_all", lang),
             value=(selected_count == len(categories)),
             key="select_all_categories"
         )
 
         if select_all:
             new_selection = st.multiselect(
-                "Kategoriler",
+                t("sidebar_categories", lang),
                 categories,
                 default=categories,
                 key="multi_cat"
             )
         else:
             new_selection = st.multiselect(
-                "Kategoriler",
+                t("sidebar_categories", lang),
                 categories,
                 default=selected_categories,
                 key="multi_cat"
             )
 
-        if st.button("Uygula", key="apply_categories"):
+        if st.button("Apply" if lang == "en" else "Uygula", key="apply_categories"):
             st.session_state.selected_categories = new_selection
             st.experimental_rerun()
 
