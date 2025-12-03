@@ -21,7 +21,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-DATA_PATH = "/kaggle/input/food-nutrition-dataset-150-everyday-foods/Food_Nutrition_Dataset.csv"
+DATA_PATH = "Food_Nutrition_Dataset.csv"
 
 LANG_MAP = {"Türkçe": "tr", "English": "en"}
 
