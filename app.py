@@ -371,45 +371,40 @@ with st.sidebar:
 
     st.markdown("---")
 
-    # --- PREMIUM MODAL KATEGORİ FİLTRESİ ---
-    st.markdown("### Kategoriler")
+    # --- HATASIZ KATEGORİ FİLTRESİ (MODAL YOK) ---
+st.markdown("### Kategoriler")
 
-    selected_count = len(selected_categories)
+selected_count = len(selected_categories)
+if selected_count == 0:
+    st.caption("Hiç kategori seçilmedi.")
+else:
+    st.caption(f"**{selected_count} kategori seçildi**")
 
-    if selected_count == 0:
-        st.caption("Hiç kategori seçilmedi.")
+with st.expander("Kategori Listesini Aç"):
+    select_all = st.checkbox(
+        "Tümünü Seç / Kaldır",
+        value=(selected_count == len(categories)),
+        key="select_all_categories"
+    )
+
+    if select_all:
+        new_selection = st.multiselect(
+            "Kategoriler",
+            categories,
+            default=categories,
+            key="multi_cat"
+        )
     else:
-        st.caption(f"**{selected_count} kategori seçildi**")
+        new_selection = st.multiselect(
+            "Kategoriler",
+            categories,
+            default=selected_categories,
+            key="multi_cat"
+        )
 
-    open_modal = st.button("Kategori Listesini Aç")
-
-    if open_modal:
-        with st.modal("Kategori Seç"):
-            select_all = st.checkbox(
-                "Tümünü Seç / Kaldır",
-                value=(selected_count == len(categories))
-            )
-
-            if select_all:
-                new_selection = st.multiselect(
-                    "Kategoriler",
-                    categories,
-                    default=categories
-                )
-            else:
-                new_selection = st.multiselect(
-                    "Kategoriler",
-                    categories,
-                    default=selected_categories
-                )
-
-            apply_btn = st.button("Uygula")
-
-            if apply_btn:
-                st.session_state.selected_categories = new_selection
-                st.experimental_rerun()
-
-
+    if st.button("Uygula", key="apply_categories"):
+        st.session_state.selected_categories = new_selection
+        st.experimental_rerun()
 
     min_cal, max_cal = int(df["calories"].min()), int(df["calories"].max())
     calorie_range = st.slider(
