@@ -128,297 +128,500 @@ NUTR_LABELS = {
     "health_score": {"tr": "Sağlık Skoru", "en": "Health Score"},
 }
 
+
 def t(key: str, lang: str) -> str:
     return TEXT.get(key, {}).get(lang, key)
+
 
 def nl(col: str, lang: str) -> str:
     return NUTR_LABELS.get(col, {}).get(lang, col)
 
+
 # =========================================================
-# THEME / CSS (Palantir-ish)
+# THEME / CSS (Palantir Glass Dark & Light)
 # =========================================================
 def inject_css(theme: str):
     if theme == "Dark":
         css = """
         <style>
-
-        /* ===========================================
-           GLOBAL RESET
-        ============================================*/
-        header, .ea3mdgi4 {
+        /* Header tamamen yok */
+        header[data-testid="stHeader"] {
             background: transparent !important;
             height: 0 !important;
             padding: 0 !important;
             margin: 0 !important;
+            border: none !important;
+            box-shadow: none !important;
         }
 
+        /* Ana arka plan – Palantir Dark Glass */
         body, [data-testid="stAppViewContainer"] {
-            background: radial-gradient(circle at top left,#0a0f1e 0%,#111827 45%,#0a0f1e 100%) !important;
-            color: #e5e7eb !important;
+            background: radial-gradient(circle at top left,#020617 0,#020617 15%,#020617 40%,#020617 100%) !important;
+            color: #E5E7EB !important;
         }
 
+        /* Ana içerik alanı */
+        [data-testid="stAppViewContainer"] .main {
+            padding-top: 1.2rem;
+        }
+
+        /* Sidebar – koyu cam efekti */
         section[data-testid="stSidebar"] {
-            background: linear-gradient(to bottom,#0a0f1e,#111827) !important;
-            color: #dce7f3 !important; 
-        }
-
-        /* ===========================================
-           PALANTIR DARK GLASS KPI CARD
-        ============================================*/
-        .kpi-card {
-            border-radius: 15px !important;
-            padding: 20px 25px !important;
-
-            background: rgba(15,23,42,0.55) !important;   /* CAM ETKİSİ */
+            background: rgba(15,23,42,0.92) !important;
             backdrop-filter: blur(14px) !important;
-
-            border: 1px solid rgba(148,163,184,0.25) !important;
-            box-shadow: 0 18px 45px rgba(0,0,0,0.65) !important;
-
-            color: #E8F1FF !important;
+            -webkit-backdrop-filter: blur(14px) !important;
+            border-right: 1px solid rgba(148,163,184,0.18) !important;
+            box-shadow: 12px 0 40px rgba(0,0,0,0.5);
+            color: #E5E7EB !important;
         }
 
-        .kpi-card h3, .kpi-card p, .kpi-card .value {
-            color: #E8F1FF !important;
+        /* Sidebar iç yazılar */
+        section[data-testid="stSidebar"] * {
+            color: #E5E7EB !important;
         }
 
-        .kpi-card .value {
-            font-size: 26px !important;
-            font-weight: 800 !important;
-        }
-
-        /* ===========================================
-           HEADER BANNER
-        ============================================*/
+        /* Ana header banner */
         .app-header-banner {
             width: 100%;
             padding: 1.4rem 1.8rem;
             border-radius: 1.1rem;
-
-            background: rgba(15,23,42,0.55);
-            backdrop-filter: blur(14px);
-
-            border: 1px solid rgba(148,163,184,0.25);
-            box-shadow: 0 18px 45px rgba(15,23,42,0.85);
-
+            background: radial-gradient(circle at top left, rgba(16,24,40,0.96), rgba(15,23,42,0.92));
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(148,163,184,0.45);
+            box-shadow: 0 26px 70px rgba(15,23,42,0.9);
             display: flex;
             align-items: center;
-            margin-bottom: 1.4rem;
+            margin-bottom: 1.3rem;
+        }
+
+        .app-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.1rem;
+        }
+
+        /* Premium elma logosu – cam chip */
+        .app-logo-chip {
+            width: 52px;
+            height: 52px;
+            border-radius: 999px;
+            background: conic-gradient(from 160deg,#22c55e,#a3e635,#22c55e,#4ade80);
+            box-shadow: 0 0 14px rgba(34,197,94,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .app-logo-inner {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            background: radial-gradient(circle at top,#042f2e,#022c22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .app-logo-emoji {
+            font-size: 1.9rem;
+            filter: drop-shadow(0 0 8px rgba(190,242,100,0.9));
         }
 
         .app-title {
-            font-size: 2.35rem !important;
+            font-size: 2.45rem !important;
             font-weight: 900 !important;
             letter-spacing: -0.03em;
-            color: #9FFFCB !important;
+            color: #A7F3D0 !important;
         }
 
         .app-subtitle {
             font-size: 1.05rem !important;
-            color: #d8dee9 !important;
-            opacity: 0.95 !important;
+            color: #E5E7EB !important;
+            opacity: 0.9;
         }
 
-        /* ===========================================
-           TABS
-        ============================================*/
-        .stTabs [data-baseweb="tab"] p {
-            color: #E5E7EB !important;
+        /* Başlıklar */
+        h1, h2, h3, h4, h5 {
+            color: #A7F3D0 !important;
         }
-        .stTabs [aria-selected="true"] p {
-            color: #9FFFCB !important;
+        h2 {
+            font-size: 26px !important;
+            font-weight: 800 !important;
+        }
+        h3, h4 {
+            font-size: 20px !important;
             font-weight: 700 !important;
         }
 
-        /* ===========================================
-           PRIME BUTTON
-        ============================================*/
-        .stButton button {
-            background: #10b981 !important;
-            color: #0A0F1E !important;
-            font-weight: 800 !important;
-            border-radius: 10px !important;
-            border: none !important;
-            padding: 0.55rem 1.3rem !important;
-            transition: 0.15s !important;
-            box-shadow: 0 4px 14px rgba(16,185,129,0.35) !important;
-        }
-        .stButton button:hover {
-            background: #34d399 !important;
-            transform: translateY(-2px);
+        /* Genel metin */
+        p, span, label, div, .stMarkdown, .stText, .stCaption {
+            color: #E5E7EB !important;
         }
 
-        /* ===========================================
-           SELECTBOX (Arka plan dark navy)
-           DROPDOWN → GRİ ARKA PLAN & HOVER → SİYAH YAZI
-        ============================================*/
-        /* Ana kutu */
+        /* Tabs */
+        .stTabs [data-baseweb="tab"] {
+            padding-bottom: 4px !important;
+        }
+        .stTabs [data-baseweb="tab"] p {
+            color: #CBD5F5 !important;
+            font-weight: 500 !important;
+        }
+        .stTabs [aria-selected="true"] p {
+            color: #A7F3D0 !important;
+            font-weight: 700 !important;
+        }
+        .stTabs [aria-selected="true"] {
+            border-bottom: 3px solid #22c55e !important;
+        }
+
+        /* KPI grid & kartlar */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 6px;
+        }
+        .kpi-card {
+            background: radial-gradient(circle at top left,rgba(15,23,42,0.98),rgba(15,23,42,0.92));
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: 18px;
+            border: 1px solid rgba(148,163,184,0.38);
+            padding: 0.9rem 1.3rem;
+            box-shadow: 0 22px 60px rgba(15,23,42,0.95);
+        }
+        .kpi-card h3 {
+            margin: 0;
+            font-size: 0.98rem;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            color: #E5E7EB !important;
+        }
+        .kpi-card .value {
+            font-size: 1.85rem;
+            font-weight: 800;
+            margin: 0.25rem 0 0.15rem 0;
+            color: #F9FAFB !important;
+        }
+        .kpi-card p {
+            margin: 0;
+            font-size: 0.82rem;
+            color: #9CA3AF !important;
+        }
+
+        /* Butonlar */
+        .stButton button {
+            background: linear-gradient(135deg,#22c55e,#4ade80) !important;
+            color: #022c22 !important;
+            font-weight: 800 !important;
+            border-radius: 999px !important;
+            border: none !important;
+            box-shadow: 0 10px 30px rgba(34,197,94,0.45) !important;
+            padding: 0.55rem 1.5rem !important;
+            transition: transform 0.13s ease-out, box-shadow 0.13s ease-out;
+        }
+        .stButton button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 40px rgba(34,197,94,0.6) !important;
+        }
+
+        /* Input & Select – koyu cam */
+        input, textarea {
+            background: rgba(15,23,42,0.85) !important;
+            border-radius: 10px !important;
+            border: 1px solid #334155 !important;
+            color: #E5E7EB !important;
+        }
+        input:hover, textarea:hover {
+            border-color: #22c55e !important;
+        }
+        input::placeholder, textarea::placeholder {
+            color: #9CA3AF !important;
+            opacity: 1 !important;
+        }
+
         div[data-baseweb="select"] > div {
-            background-color: #0f172a !important;
+            background: rgba(15,23,42,0.9) !important;
+            border-radius: 10px !important;
             border: 1px solid #334155 !important;
         }
         div[data-baseweb="select"] * {
             color: #E5E7EB !important;
         }
-
-        /* Dropdown list */
         ul[role="listbox"] {
-            background-color: #f1f5f9 !important;   /* GRİ */
-            border: 1px solid #cbd5e1 !important;
-        }
-
-        ul[role="listbox"] li {
-            background-color: #f1f5f9 !important;
-            color: #1e293b !important;
-        }
-
-        /* HOVER → siyah yazı */
-        ul[role="listbox"] li:hover {
-            background-color: #e2e8f0 !important;
-            color: #000000 !important;
-        }
-        ul[role="listbox"] li:hover * {
-            color: #000000 !important;
-        }
-
-        /* Input */
-        input, textarea {
-            background-color: #0f172a !important;
+            background: rgba(15,23,42,0.98) !important;
+            border-radius: 12px !important;
             border: 1px solid #334155 !important;
+        }
+        ul[role="listbox"] li {
+            background: transparent !important;
+        }
+        ul[role="listbox"] li * {
             color: #E5E7EB !important;
         }
-        input::placeholder {
-            color: #94a3b8 !important;
+        ul[role="listbox"] li:hover {
+            background: #22c55e !important;
+        }
+        ul[role="listbox"] li:hover * {
+            color: #020617 !important;
         }
 
+        /* Slider */
+        .stSlider > div[data-baseweb="slider"] > div > div {
+            background: #1e293b !important;
+        }
+        .stSlider [role="slider"] {
+            background: #22c55e !important;
+            box-shadow: 0 0 0 3px rgba(34,197,94,0.35) !important;
+        }
+
+        /* plotly title rengi */
+        .js-plotly-plot .plotly .gtitle {
+            fill: #E5E7EB !important;
+        }
         </style>
         """
     else:
         css = """
         <style>
+        header[data-testid="stHeader"] {
+            background: transparent !important;
+            height: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
 
-        /* ===========================================
-           LIGHT MODE BASE
-        ============================================*/
         body, [data-testid="stAppViewContainer"] {
             background: linear-gradient(to bottom,#f9fafb,#e5e7eb) !important;
-            color: #1e293b !important;
+            color: #111827 !important;
+        }
+
+        [data-testid="stAppViewContainer"] .main {
+            padding-top: 1.2rem;
         }
 
         section[data-testid="stSidebar"] {
             background: #ffffff !important;
             border-right: 1px solid #e2e8f0 !important;
+            box-shadow: 10px 0 35px rgba(15,23,42,0.08);
+            color:#1e293b !important;
         }
-
-        /* ===========================================
-           PALANTIR LIGHT GLASS KPI CARD
-        ============================================*/
-        .kpi-card {
-            border-radius: 15px !important;
-            padding: 20px 25px !important;
-
-            background: rgba(255,255,255,0.65) !important; 
-            backdrop-filter: blur(8px) !important;
-
-            border: 1px solid rgba(0,0,0,0.08) !important;
-            box-shadow: 0 12px 28px rgba(0,0,0,0.09) !important;
-
+        section[data-testid="stSidebar"] * {
             color:#1e293b !important;
         }
 
-        .kpi-card .value {
+        /* Light Glass header */
+        .app-header-banner {
+            width: 100%;
+            padding: 1.1rem 1.6rem;
+            border-radius: 1rem;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(226,232,240,0.9);
+            box-shadow: 0 20px 55px rgba(148,163,184,0.45);
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.1rem;
+        }
+
+        .app-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .app-logo-chip {
+            width: 52px;
+            height: 52px;
+            border-radius: 999px;
+            background: conic-gradient(from 160deg,#16a34a,#a3e635,#22c55e,#16a34a);
+            box-shadow: 0 0 12px rgba(22,163,74,0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .app-logo-inner {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            background: radial-gradient(circle at top,#ecfdf5,#bbf7d0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .app-logo-emoji {
+            font-size: 1.8rem;
+        }
+
+        .app-title {
+            font-size: 2.35rem !important;
+            font-weight: 900 !important;
+            color: #047857 !important;
+        }
+        .app-subtitle {
+            font-size: 1.02rem !important;
+            color: #4b5563 !important;
+        }
+
+        h1, h2, h3, h4, h5 {
+            color: #047857 !important;
+        }
+        h2 {
             font-size: 26px !important;
             font-weight: 800 !important;
         }
 
-        /* ===========================================
-           HEADER BANNER (LIGHT GLASS)
-        ============================================*/
-        .app-header-banner {
-            background: rgba(255,255,255,0.85);
-            border: 1px solid rgba(209,213,219,0.8);
-            box-shadow: 0 18px 45px rgba(148,163,184,0.35);
-            backdrop-filter: blur(8px);
+        p, span, label, div, .stMarkdown, .stText, .stCaption {
+            color: #1f2933 !important;
         }
 
-        .app-title {
+        /* Tabs */
+        .stTabs [data-baseweb="tab"] {
+            padding-bottom: 4px !important;
+        }
+        .stTabs [data-baseweb="tab"] p {
+            color: #4b5563 !important;
+            font-weight: 500 !important;
+        }
+        .stTabs [aria-selected="true"] p {
             color: #047857 !important;
+            font-weight: 700 !important;
         }
-
-        .app-subtitle {
-            color: #475569 !important;
+        .stTabs [aria-selected="true"] {
+            border-bottom: 3px solid #10b981 !important;
         }
-
-        /* ===========================================
-           BUTTONS (mint)
-        ============================================*/
-        .stButton button {
-            background: #10b981 !important;
-            color: white !important;
-            font-weight: 800 !important;
-            border-radius: 10px !important;
+        div[data-testid="stTabs"] {
+            background: transparent !important;
             border: none !important;
+            box-shadow: none !important;
+        }
+
+        /* KPI grid & kartlar */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 6px;
+        }
+        .kpi-card {
+            background: #ffffff !important;
+            border-radius: 18px !important;
+            border: 1px solid #e2e8f0 !important;
+            box-shadow: 0 18px 40px rgba(148,163,184,0.45) !important;
+            padding: 0.9rem 1.3rem;
+        }
+        .kpi-card h3 {
+            margin: 0;
+            font-size: 0.98rem;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            color: #111827 !important;
+        }
+        .kpi-card .value {
+            font-size: 1.9rem;
+            font-weight: 800;
+            margin: 0.25rem 0 0.15rem 0;
+            color: #0f172a !important;
+        }
+        .kpi-card p {
+            margin: 0;
+            font-size: 0.82rem;
+            color: #6b7280 !important;
+        }
+
+        /* Butonlar */
+        .stButton button {
+            background: linear-gradient(135deg,#10b981,#22c55e) !important;
+            color: #022c22 !important;
+            font-weight: 800 !important;
+            border-radius: 999px !important;
+            border: none !important;
+            box-shadow: 0 10px 28px rgba(16,185,129,0.45) !important;
+            padding: 0.55rem 1.5rem !important;
+            transition: transform 0.13s ease-out, box-shadow 0.13s ease-out;
         }
         .stButton button:hover {
-            background: #34d399 !important;
+            transform: translateY(-1px);
+            box-shadow: 0 14px 40px rgba(16,185,129,0.6) !important;
         }
 
-        /* ===========================================
-           SELECTBOX
-           (Light mode + gri dropdown + hover siyah yazı)
-        ============================================*/
+        /* Input & select */
+        input, textarea {
+            background: #ffffff !important;
+            border-radius: 10px !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #111827 !important;
+        }
+        input:hover, textarea:hover {
+            border-color: #10b981 !important;
+        }
+
         div[data-baseweb="select"] > div {
-            background-color: #ffffff !important;
+            background: #ffffff !important;
+            border-radius: 10px !important;
             border: 1px solid #cbd5e1 !important;
         }
         div[data-baseweb="select"] * {
-            color: #1e293b !important;
+            color: #111827 !important;
         }
-
         ul[role="listbox"] {
-            background-color: #f1f5f9 !important;
+            background: #ffffff !important;
+            border-radius: 12px !important;
             border: 1px solid #cbd5e1 !important;
         }
-        ul[role="listbox"] li {
-            color: #1e293b !important;
+
+        /* Slider */
+        .stSlider > div[data-baseweb="slider"] > div > div {
+            background: #e5e7eb !important;
         }
-        ul[role="listbox"] li:hover {
-            background-color: #e2e8f0 !important;
-            color: #000000 !important;
-        }
-        ul[role="listbox"] li:hover * {
-            color: #000000 !important;
+        .stSlider [role="slider"] {
+            background: #f97316 !important;
+            box-shadow: 0 0 0 3px rgba(248,113,113,0.25) !important;
         }
 
+        /* plotly title */
+        .js-plotly-plot .plotly .gtitle {
+            fill: #111827 !important;
+        }
         </style>
         """
     st.markdown(css, unsafe_allow_html=True)
 
+
 # =========================================================
-# KPI GRID LAYOUT (Palantir responsive)
+# KPI GRID (HTML kullanıyor)
 # =========================================================
-st.markdown("""
-<style>
-.kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 22px;
-    width: 100%;
-    margin-top: 15px;
-}
-</style>
-""", unsafe_allow_html=True)
+def create_kpi(title, value, subtext="", icon="📊"):
+    st.markdown(
+        f"""
+        <div class="kpi-card">
+            <h3><span class="kpi-icon">{icon}</span>{title}</h3>
+            <p class="value">{value}</p>
+            <p>{subtext}</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 # =========================================================
 # DATA & HEALTH SCORE
 # =========================================================
 @st.cache_data
 def load_data():
     df = pd.read_csv(DATA_PATH)
-    # basit sağlık skoru (domain mantığına dayalı, pure ML değil)
+
     def health_score(row):
         score = 50
 
-        # Kalori: çok yüksek kalori cezalı, düşük/orta ödüllü
         c = row["calories"]
         if c <= 100:
             score += 15
@@ -427,7 +630,6 @@ def load_data():
         elif c >= 350:
             score -= 10
 
-        # Protein: yüksek protein ödüllü
         p = row["protein"]
         if p >= 15:
             score += 18
@@ -436,21 +638,18 @@ def load_data():
         elif p >= 4:
             score += 5
 
-        # Yağ: çok yağlılar cezalı
         f = row["fat"]
         if f >= 20:
             score -= 15
         elif f >= 10:
             score -= 7
 
-        # Vitamin C: bağışıklık artı puan
         vitc = 0 if pd.isna(row.get("vitamin_c", 0)) else row.get("vitamin_c", 0)
         if vitc >= 30:
             score += 10
         elif vitc >= 10:
             score += 6
 
-        # Demir: anemiye karşı artı puan
         iron = 0 if pd.isna(row.get("iron", 0)) else row.get("iron", 0)
         if iron >= 3:
             score += 6
@@ -461,6 +660,7 @@ def load_data():
 
     df["health_score"] = df.apply(health_score, axis=1)
     return df
+
 
 df = load_data()
 
@@ -488,14 +688,13 @@ def train_calorie_model(data: pd.DataFrame):
         scores = []
         for train_idx, val_idx in kf.split(X):
             pipe.fit(X[train_idx], y[train_idx])
-            scores.append(pipe.score(X[val_idx], y[val_idx]))  # R^2
+            scores.append(pipe.score(X[val_idx], y[val_idx]))
         mean_r2 = np.mean(scores)
         cv_scores.append((a, mean_r2))
         if mean_r2 > best_score:
             best_score = mean_r2
             best_alpha = a
 
-    # En iyi alpha ile final modeli tüm veride eğit
     best_model = Pipeline(
         [
             ("scaler", StandardScaler()),
@@ -505,6 +704,7 @@ def train_calorie_model(data: pd.DataFrame):
     best_model.fit(X, y)
 
     return best_model, cv_scores, best_alpha, best_score
+
 
 cal_model, cv_scores, best_alpha, best_cv = train_calorie_model(df)
 
@@ -527,6 +727,7 @@ def compute_clusters(data: pd.DataFrame, n_clusters: int):
     explained = pca.explained_variance_ratio_.sum()
     return result, explained
 
+
 # =========================================================
 # SIMILARITY – RECOMMENDER
 # =========================================================
@@ -536,27 +737,14 @@ def build_similarity_matrix(data: pd.DataFrame):
     sim = cosine_similarity(feats)
     return sim
 
+
 sim_matrix = build_similarity_matrix(df)
-# =========================================================
-# KPI COMPONENT
-# =========================================================
-def create_kpi(title, value, subtext="", icon="📊"):
-    st.markdown(
-        f"""
-        <div class="kpi-card">
-            <h3><span class="kpi-icon">{icon}</span> {title}</h3>
-            <p class="value">{value}</p>
-            <p>{subtext}</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+
 # =========================================================
 # CATEGORY STATE (sidebar'dan ÖNCE OLMALI!)
 # =========================================================
 categories = sorted(df["category"].unique())
 
-# İlk yüklemede tüm kategoriler seçili olsun
 if "selected_categories" not in st.session_state:
     st.session_state.selected_categories = categories.copy()
 
@@ -594,12 +782,11 @@ with st.sidebar:
     else:
         st.caption(f"**{selected_count} {t('sidebar_categories_selected', lang)}**")
 
-    # SADECE BU EXPANDER GİZLENİYOR
     with st.expander(t("sidebar_open_category_list", lang)):
         select_all = st.checkbox(
             t("sidebar_select_all", lang),
             value=(selected_count == len(categories)),
-            key="select_all_categories"
+            key="select_all_categories",
         )
 
         if select_all:
@@ -607,21 +794,20 @@ with st.sidebar:
                 t("sidebar_categories", lang),
                 categories,
                 default=categories,
-                key="multi_cat"
+                key="multi_cat",
             )
         else:
             new_selection = st.multiselect(
                 t("sidebar_categories", lang),
                 categories,
                 default=selected_categories,
-                key="multi_cat"
+                key="multi_cat",
             )
 
         if st.button("Apply" if lang == "en" else "Uygula", key="apply_categories"):
             st.session_state.selected_categories = new_selection
             st.experimental_rerun()
 
-    # === DİĞER FİLTRELER BURADA VE EXPANDER DIŞINDA ===
     min_cal, max_cal = int(df["calories"].min()), int(df["calories"].max())
     calorie_range = st.slider(
         t("sidebar_calorie_range", lang),
@@ -648,6 +834,9 @@ with st.sidebar:
         value=4,
     )
 
+# =========================================================
+# FILTERED DATA
+# =========================================================
 filtered_df = df.copy()
 filtered_df = filtered_df[
     (filtered_df["category"].isin(selected_categories))
@@ -657,11 +846,9 @@ filtered_df = filtered_df[
 if focus == t("focus_high_protein", lang):
     filtered_df = filtered_df[filtered_df["protein"] >= filtered_df["protein"].median()]
     filtered_df = filtered_df.sort_values("protein", ascending=False)
-
 elif focus == t("focus_low_carb", lang):
     filtered_df = filtered_df[filtered_df["carbs"] <= filtered_df["carbs"].median()]
     filtered_df = filtered_df.sort_values("carbs", ascending=True)
-
 elif focus == t("focus_low_fat", lang):
     filtered_df = filtered_df[filtered_df["fat"] <= filtered_df["fat"].median()]
     filtered_df = filtered_df.sort_values("fat", ascending=True)
@@ -673,7 +860,11 @@ st.markdown(
     f"""
     <div class="app-header-banner">
         <div class="app-header-left">
-            <span class="app-logo">🍏</span>
+            <div class="app-logo-chip">
+                <div class="app-logo-inner">
+                    <span class="app-logo-emoji">🍏</span>
+                </div>
+            </div>
             <div class="app-header-text">
                 <div class="app-title">{t('app_title', lang)}</div>
                 <div class="app-subtitle">{t('subtitle', lang)}</div>
@@ -684,7 +875,9 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Tabs
+# =========================================================
+# TABS
+# =========================================================
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
     [
         f"📊 {t('overview_tab', lang)}",
@@ -703,8 +896,6 @@ with tab1:
     if filtered_df.empty:
         st.warning(t("no_results", lang))
     else:
-        c1, c2, c3, c4 = st.columns(4)
-
         total_foods = len(filtered_df)
         total_categories = filtered_df["category"].nunique()
         median_cal = int(filtered_df["calories"].median())
@@ -712,20 +903,14 @@ with tab1:
         top_health_score = int(top_health_row["health_score"])
         top_health_food = top_health_row["food_name"]
 
-        with c1:
-            create_kpi(t('kpi_total_foods', lang), total_foods, t('table_food', lang), "📦")
-
-        with c2:
-            create_kpi(t('kpi_total_categories', lang), total_categories, "unique", "🗂️")
-        
-        with c3:
-            create_kpi(t('kpi_median_calories', lang), median_cal, nl('calories', lang), "🔥")
-        
-        with c4:
-            create_kpi(t('kpi_top_health', lang), top_health_score, top_health_food, "💚")
+        st.markdown('<div class="kpi-grid">', unsafe_allow_html=True)
+        create_kpi(t("kpi_total_foods", lang), total_foods, t("table_food", lang), "📦")
+        create_kpi(t("kpi_total_categories", lang), total_categories, "unique", "🗂️")
+        create_kpi(t("kpi_median_calories", lang), median_cal, nl("calories", lang), "🔥")
+        create_kpi(t("kpi_top_health", lang), top_health_score, top_health_food, "💚")
+        st.markdown("</div>", unsafe_allow_html=True)
 
         st.markdown("")
-
         st.markdown(f"#### {t('section_category_macros', lang)}")
         cat_macro = (
             filtered_df.groupby("category")[["protein", "carbs", "fat"]]
@@ -777,7 +962,15 @@ with tab2:
     else:
         nut_choice = st.selectbox(
             t("explorer_select_nutrient", lang),
-            options=["calories", "protein", "carbs", "fat", "iron", "vitamin_c", "health_score"],
+            options=[
+                "calories",
+                "protein",
+                "carbs",
+                "fat",
+                "iron",
+                "vitamin_c",
+                "health_score",
+            ],
             format_func=lambda x: nl(x, lang),
         )
 
@@ -802,77 +995,73 @@ with tab2:
                 height=500,
             )
 
-with cB:
-    st.markdown(f"#### {nl(nut_choice, lang)}")
+        with cB:
+            st.markdown(f"#### {nl(nut_choice, lang)}")
 
-    # --- AKILLI 'OTHER' GRUPLAMA ---
-    cat_counts = filtered_df["category"].value_counts()
-    n_cats = len(cat_counts)
+            cat_counts = filtered_df["category"].value_counts()
+            n_cats = len(cat_counts)
+            max_display = min(12, n_cats)
 
-    # En fazla 12 kategori gösterelim
-    max_display = min(12, n_cats)
-
-    best_k = None
-    add_other = False
-
-    # Sadece ilk max_display içinden bir bölünme arıyoruz
-    for k in range(1, max_display):
-        top = cat_counts.iloc[:k]          # ana kategoriler
-        other = cat_counts.iloc[k:].sum()  # diğerlerinin toplamı
-
-        if other == 0:
-            # Zaten hiç kalan yok → OTHER gereksiz
-            best_k = k
+            best_k = None
             add_other = False
-            break
 
-        # ŞART: Other toplamı, ana kategoriler içindeki en küçük count'tan küçük/eşit olsun
-        if other <= top.min():
-            best_k = k
-            add_other = True
-            break
+            for k in range(1, max_display):
+                top = cat_counts.iloc[:k]
+                other = cat_counts.iloc[k:].sum()
 
-    if best_k is None:
-        # Uygun split bulunamadıysa:
-        # - Sadece en büyük max_display kategoriyi göster
-        # - "Other Categories" YOK, kimse veriyi çarpıtmıyor
-        best_k = max_display
-        add_other = False
+                if other == 0:
+                    best_k = k
+                    add_other = False
+                    break
 
-    top_cats = cat_counts.iloc[:best_k].index
+                if other <= top.min():
+                    best_k = k
+                    add_other = True
+                    break
 
-    if add_other:
-        # Ana kategoriler + küçüklerin birleştiği bir Other
-        df_plot = filtered_df.copy()
-        df_plot["category_grouped"] = np.where(
-            df_plot["category"].isin(top_cats),
-            df_plot["category"],
-            "Other Categories",
-        )
-    else:
-        # Sadece en büyük best_k kategori, diğerleri grafikten çıkar
-        df_plot = filtered_df[filtered_df["category"].isin(top_cats)].copy()
-        df_plot["category_grouped"] = df_plot["category"]
+            if best_k is None:
+                best_k = max_display
+                add_other = False
 
-    # --- HISTOGRAM ---
-    fig_hist = px.histogram(
-        df_plot,
-        x=nut_choice,
-        color="category_grouped",
-        nbins=25,
-        barmode="overlay",
-        opacity=0.75,
-        labels={
-            nut_choice: nl(nut_choice, lang),
-            "category_grouped": "Category",
-        },
-    )
-    fig_hist.update_layout(
-        legend_title_text="Category (Grouped)",
-        bargap=0.05,
-    )
+            top_cats = cat_counts.iloc[:best_k].index
 
-    st.plotly_chart(fig_hist, use_container_width=True)
+            if add_other:
+                df_plot = filtered_df.copy()
+                df_plot["category_grouped"] = np.where(
+                    df_plot["category"].isin(top_cats),
+                    df_plot["category"],
+                    "Other Categories",
+                )
+                ordered_categories = list(top_cats) + ["Other Categories"]
+            else:
+                df_plot = filtered_df[filtered_df["category"].isin(top_cats)].copy()
+                df_plot["category_grouped"] = df_plot["category"]
+                ordered_categories = list(top_cats)
+
+            df_plot["category_grouped"] = pd.Categorical(
+                df_plot["category_grouped"],
+                categories=ordered_categories,
+                ordered=True,
+            )
+
+            fig_hist = px.histogram(
+                df_plot,
+                x=nut_choice,
+                color="category_grouped",
+                nbins=25,
+                barmode="overlay",
+                opacity=0.75,
+                labels={
+                    nut_choice: nl(nut_choice, lang),
+                    "category_grouped": "Category",
+                },
+            )
+            fig_hist.update_layout(
+                legend_title_text="Category (Grouped)",
+                bargap=0.05,
+            )
+
+            st.plotly_chart(fig_hist, use_container_width=True)
 
 # =========================================================
 # TAB 3 – COMPARE
@@ -893,14 +1082,23 @@ with tab3:
         st.info(t("compare_warning", lang))
     else:
         cmp_df = df[df["food_name"].isin(selected_foods)].copy()
-        nutrients = ["calories", "protein", "carbs", "fat", "iron", "vitamin_c", "health_score"]
+        nutrients = [
+            "calories",
+            "protein",
+            "carbs",
+            "fat",
+            "iron",
+            "vitamin_c",
+            "health_score",
+        ]
 
-        # normalize 0-100 for radar
         norm_df = cmp_df.copy()
         for n in nutrients:
             max_val = df[n].max()
             if max_val and not pd.isna(max_val):
-                norm_df[n] = (norm_df[n] - df[n].min()) / (df[n].max() - df[n].min()) * 100
+                norm_df[n] = (norm_df[n] - df[n].min()) / (
+                    df[n].max() - df[n].min()
+                ) * 100
             else:
                 norm_df[n] = 0
 
@@ -934,22 +1132,20 @@ with tab4:
 
     cL, cR = st.columns(2)
 
-    # ---- Prediction
     with cL:
         st.markdown(f"#### {t('ml_pred_title', lang)}")
         st.caption(t("ml_pred_desc", lang))
 
         st.write(f"Best alpha: **{best_alpha}**, CV mean R²: **{best_cv:.3f}**")
 
-        p = st.number_input(nl("protein", lang), 0.0, 100.0, 10.0, step=1.0)
-        c = st.number_input(nl("carbs", lang), 0.0, 150.0, 10.0, step=1.0)
-        f = st.number_input(nl("fat", lang), 0.0, 100.0, 5.0, step=1.0)
+        p_val = st.number_input(nl("protein", lang), 0.0, 100.0, 10.0, step=1.0)
+        c_val = st.number_input(nl("carbs", lang), 0.0, 150.0, 10.0, step=1.0)
+        f_val = st.number_input(nl("fat", lang), 0.0, 100.0, 5.0, step=1.0)
 
         if st.button("Predict Calories", key="pred_button"):
-            pred = cal_model.predict(np.array([[p, c, f]]))[0]
+            pred = cal_model.predict(np.array([[p_val, c_val, f_val]]))[0]
             st.success(f"Estimated Calories: **{pred:.1f} kcal**")
 
-    # ---- Clustering
     with cR:
         st.markdown(f"#### {t('ml_cluster_title', lang)}")
         st.caption(t("ml_cluster_desc", lang))
@@ -992,15 +1188,13 @@ with tab5:
         smart_df["protein_density"] = smart_df["protein"] / smart_df["calories"]
         smart_df = smart_df.dropna(subset=["protein_density"])
         smart_df = smart_df.sort_values("protein_density", ascending=False)
-        
     elif mode == t("smart_low_calorie", lang):
         smart_df = smart_df.sort_values("calories", ascending=True)
-
     elif mode == t("smart_high_iron", lang):
-        smart_df = smart_df[smart_df["iron"] >= 2]   # Bilimsel eşik
+        smart_df = smart_df[smart_df["iron"] >= 2]
         smart_df = smart_df.sort_values(
             ["iron", "health_score"],
-            ascending=[False, False]
+            ascending=[False, False],
         )
     elif mode == t("smart_vitc", lang):
         smart_df["vitc_density"] = smart_df["vitamin_c"] / smart_df["calories"]
@@ -1046,7 +1240,6 @@ with tab6:
 
         temp = df.copy()
         temp["similarity"] = sims
-        # kendisini hariç tut
         temp = temp[temp["food_name"] != base_food]
         result = temp.sort_values("similarity", ascending=False).head(top_n)
 
