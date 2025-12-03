@@ -747,28 +747,26 @@ def build_similarity_matrix(data: pd.DataFrame):
 sim_matrix = build_similarity_matrix(df)
 
 # =========================================================
-# CATEGORY STATE (sidebar'dan ÖNCE OLMALI!)
+# CATEGORY STATE
 # =========================================================
 categories = sorted(df["category"].unique())
-
 if "selected_categories" not in st.session_state:
     st.session_state.selected_categories = categories.copy()
-
 selected_categories = st.session_state.selected_categories
 
 # =========================================================
 # SIDEBAR
 # =========================================================
 with st.sidebar:
-    st.markdown(f"### 🧭 {t('sidebar_control', lang)}")
-
+    # Language selection first (label sabit)
     lang_choice = st.radio(
-    t("sidebar_language", lang),
-    options=list(LANG_MAP.keys()),
-    index=0,
+        "Dil / Language",
+        options=list(LANG_MAP.keys()),
+        index=0,
     )
-
     lang = LANG_MAP[lang_choice]
+
+    st.markdown(f"### 🧭 {t('sidebar_control', lang)}")
 
     theme_choice = st.radio(
         label=t("sidebar_theme", lang),
@@ -780,7 +778,6 @@ with st.sidebar:
 
     st.markdown("---")
 
-with st.sidebar:
     st.markdown(f"### {t('sidebar_categories', lang)}")
 
     selected_count = len(selected_categories)
@@ -1078,8 +1075,9 @@ with tab3:
     st.markdown(t("compare_instruction", lang))
 
     all_foods = df["food_name"].tolist()
+    label_foods = "Gıdalar" if lang == "tr" else "Foods"
     selected_foods = st.multiselect(
-        "Foods",
+        label_foods,
         options=all_foods,
         default=all_foods[:3],
         max_selections=4,
@@ -1151,7 +1149,10 @@ with tab4:
 
         if st.button(t("ml_predict_button", lang), key="pred_button"):
             pred = cal_model.predict(np.array([[p_val, c_val, f_val]]))[0]
-            st.success(f"Estimated Calories: **{pred:.1f} kcal**")
+            if lang == "tr":
+                st.success(f"Tahmini Kalori: **{pred:.1f} kcal**")
+            else:
+                st.success(f"Estimated Calories: **{pred:.1f} kcal**")
 
     with cR:
         st.markdown(f"#### {t('ml_cluster_title', lang)}")
@@ -1160,6 +1161,7 @@ with tab4:
         clustered_df, explained = compute_clusters(df, cluster_k)
         st.write(f"PCA variance explained: **{explained*100:.1f}%**")
 
+        title_cluster = "Gıda Besin Haritası (PCA + K-Means)" if lang == "tr" else "Food Nutrition Map (PCA + K-Means)"
         fig_cluster = px.scatter(
             clustered_df,
             x="pc1",
@@ -1167,7 +1169,7 @@ with tab4:
             color="cluster",
             hover_name="food_name",
             hover_data=["category", "calories", "protein", "carbs", "fat"],
-            title="Food Nutrition Map (PCA + K-Means)",
+            title=title_cluster,
         )
         st.plotly_chart(fig_cluster, use_container_width=True)
 
@@ -1211,7 +1213,10 @@ with tab5:
     if smart_df.empty:
         st.warning(t("no_results", lang))
     else:
-        st.write(f"Found **{len(smart_df)}** items.")
+        if lang == "tr":
+            st.write(f"Toplam **{len(smart_df)}** gıda bulundu.")
+        else:
+            st.write(f"Found **{len(smart_df)}** items.")
         st.dataframe(
             smart_df[
                 [
@@ -1237,11 +1242,14 @@ with tab6:
     st.markdown(t("recom_desc", lang))
 
     food_list = df["food_name"].tolist()
-    base_food = st.selectbox("Food", options=food_list)
+    label_food = "Gıda" if lang == "tr" else "Food"
+    base_food = st.selectbox(label_food, options=food_list)
 
     top_n = st.slider(
-    t("recom_howmany", lang),
-    min_value=3, max_value=15, value=8
+        t("recom_howmany", lang),
+        min_value=3,
+        max_value=15,
+        value=8,
     )
 
     if st.button(t("recom_button", lang), key="recom_button"):
@@ -1271,10 +1279,11 @@ with tab6:
             use_container_width=True,
         )
 
+        title_sim = "En Benzer Gıdalar (Kosinüs Benzerliği)" if lang == "tr" else "Most Similar Foods (Cosine Similarity)"
         fig_bar = px.bar(
             result,
             x="food_name",
             y="similarity",
-            title="Most Similar Foods (Cosine Similarity)",
+            title=title_sim,
         )
         st.plotly_chart(fig_bar, use_container_width=True)
