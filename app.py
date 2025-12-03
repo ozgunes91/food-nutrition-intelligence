@@ -871,10 +871,10 @@ with st.sidebar:
     focus = st.radio(
         t("sidebar_focus", lang),
         options=[
-            t("focus_all', lang),
-            t("focus_high_protein', lang),
-            t("focus_low_carb', lang),
-            t("focus_low_fat', lang),
+            t('focus_all', lang),
+            t('focus_high_protein', lang),
+            t('focus_low_carb', lang),
+            t('focus_low_fat', lang),
         ],
     )
 
