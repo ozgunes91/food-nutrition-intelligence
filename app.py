@@ -141,67 +141,65 @@ def inject_css(theme: str):
     if theme == "Dark":
         css = """
         <style>
-    
+
         /* === GLOBAL DARK BACKGROUND === */
         body, [data-testid="stAppViewContainer"] {
             background: radial-gradient(circle at top left,#0a0f1e 0%,#111827 45%,#0a0f1e 100%) !important;
             color: #e5e7eb !important;
-            margin-top: 0 !important;
-            padding-top: 0 !important;
         }
-    
-        /* ÜSTTEKİ BEYAZ BOŞLUĞU YOK ET */
+
+        /* ÜSTTEKİ BEYAZ BOŞLUK GİTSİN */
         header, .ea3mdgi4 {
             background: transparent !important;
         }
-    
+
         /* === SIDEBAR === */
         section[data-testid="stSidebar"] {
             background: linear-gradient(to bottom,#0a0f1e,#111827) !important;
             color: #dce7f3 !important; 
         }
-    
-        .stSidebar h1, .stSidebar h2, .stSidebar h3,
-        .stSidebar h4, .stSidebar h5 {
-            color: #8BEFFF !important;   /* buz mavisi */
-            font-weight: 600 !important;
-        }
-    
-        /* Sidebar etiketleri */
-        .stRadio label, .stSlider label, .stSelectbox label,
-        .stMultiSelect label {
-            color: #c8d3e0 !important;  /* açık gri/buz tonu */
-            font-weight: 600;
-        }
-    
-        /* === ANA BAŞLIKLAR — NEON CYAN === */
-        h1, h2, h3, h4 {
-            color: #8BEFFF !important;   /* buz mavisi */
+
+        .stSidebar h1, .stSidebar h2, .stSidebar h3 {
+            color: #A8FFBF !important;   /* FISTIK YEŞİLİ BAŞLIK */
             font-weight: 700 !important;
         }
-    
-        /* Alt başlık ve açıklama metinleri — parlak gri */
+
+        /* Sidebar label’lar */
+        .stRadio label, .stSlider label, .stSelectbox label, 
+        .stMultiSelect label {
+            color: #c8d3e0 !important;
+            font-weight: 600;
+        }
+
+        /* === ANA BAŞLIKLAR (FISTIK YEŞİLİ) === */
+        h1, h2, h3, h4 {
+            color: #A8FFBF !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.5px;
+        }
+
+        /* Açıklama metinleri */
         p, label, span, div, .markdown-text-container {
             color: #dbe3ed !important;
         }
-    
-        /* === TABLAR === */
+
+        /* === TABS === */
         .stTabs [data-baseweb="tab"] {
             color: #b7c2cf !important;
             font-weight: 500;
         }
-    
+
         .stTabs [data-baseweb="tab"]:hover {
-            ccolor: #8BEFFF !important;   /* buz mavisi */
+            color: #A8FFBF !important;
         }
-    
-        /* SEÇİLİ TAB — NEON CYAN ALT ÇİZGİ */
+
+        /* AKTİF TAB ALT ÇİZGİ */
         .stTabs [aria-selected="true"] {
-            color: #38e8ff !important;
+            color: #A8FFBF !important;
             font-weight: 700 !important;
-            border-bottom: 3px solid #38e8ff !important;
+            border-bottom: 3px solid #A8FFBF !important;
         }
-    
+
         /* === KPI CARDS === */
         .kpi-card {
             background: rgba(17,24,39,0.85) !important;
@@ -210,70 +208,55 @@ def inject_css(theme: str):
             padding: 1.2rem 1.4rem;
             box-shadow: 0 22px 50px rgba(0,0,0,0.55);
         }
-    
-        .kpi-label {
-            color: #9dbad5 !important;
-        }
-    
-        .kpi-value {
-            color: #ffffff !important;
-        }
-    
-        .kpi-sub {
-            color: #c7d3df !important;
-        }
-    
-        /* === INPUT / SELECT / SLIDER === */
+
+        .kpi-label { color: #9dbad5 !important; }
+        .kpi-value { color: #ffffff !important; }
+        .kpi-sub   { color: #c7d3df !important; }
+
+        /* === INPUT / SELECT === */
         .stTextInput input,
-        .stNumberInput input,
-        .stSelectbox div[data-baseweb="select"] > div {
+        .stNumberInput input {
             background-color: #f9fafb !important;
             color: #111827 !important;
             border-radius: 6px !important;
         }
-    
-        /* === BUTTONS — ARTIK GÖRÜNÜYOR === */
-        button[kind="primary"], .stButton button {
-            background-color: #38e8ff !important;
-            color: #0a0f1e !important;
-            font-weight: 700;
-            border-radius: 6px;
-            border: none;
-        }
-    
-        button[kind="primary"]:hover, .stButton button:hover {
-            background-color: #1cc9e3 !important;
-            color: #000 !important;
-        }
-                /* === SELECTBOX & DROPDOWN (Dark Mode Fix) === */
+
+        /* === SELECTBOX / DROPDOWN === */
         div[data-baseweb="select"] > div {
-            background-color: #0f172a !important;  /* koyu lacivert */
-            color: #e2e8f0 !important;             /* açık gri yazı */
-            border: 1px solid #334155 !important;  /* soft border */
-        }
-        
-        ul[role="listbox"] {
-            background-color: #0f172a !important;  /* dropdown arka plan */
+            background-color: #0f172a !important;
             color: #e2e8f0 !important;
             border: 1px solid #334155 !important;
         }
-        
-        ul[role="listbox"] li {
-            color: #e2e8f0 !important;  /* seçenek yazısı */
-            padding: 8px 12px;
+
+        ul[role="listbox"] {
+            background-color: #0f172a !important;
+            color: #e2e8f0 !important;
+            border: 1px solid #334155 !important;
         }
-        
+
         ul[role="listbox"] li:hover {
-            background-color: #1e293b !important;  /* hover */
-            color: #38e8ff !important;             /* neon cyan */
-            cursor: pointer;
+            background-color: #1e293b !important;
+            color: #A8FFBF !important;   /* FISTIK YEŞİLİ HOVER */
         }
-        
-        /* seçilmiş seçenek */
+
         div[data-baseweb="select"] svg {
-            color: #38e8ff !important;  /* ok ikonu */
+            color: #A8FFBF !important;
         }
-            
+
+        /* === BUTTONS === */
+        .stButton button, button[kind="primary"] {
+            background-color: #A8FFBF !important;
+            color: #0a0f1e !important;
+            font-weight: 800 !important;
+            border-radius: 6px !important;
+            border: none !important;
+        }
+
+        .stButton button:hover, button[kind="primary"]:hover {
+            background-color: #7AFFA5 !important; /* bir tık koyu */
+            color: #000 !important;
+        }
+
         </style>
         """
 
