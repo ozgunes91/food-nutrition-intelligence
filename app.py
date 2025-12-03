@@ -141,88 +141,94 @@ def inject_css(theme: str):
     if theme == "Dark":
         css = """
         <style>
-        /* === DARK MODE MASTER STYLE === */
+
+        /* === DARK MODE – ICE BLUE EDITION === */
+
         body, [data-testid="stAppViewContainer"] {
             background: radial-gradient(circle at top left, #0a0f1e 0%, #111827 45%, #0a0f1e 100%) !important;
-            color: #f3f4f6 !important; /* tüm metinler açık gri-beyaz */
+            color: #d7ecff !important; /* ana metin = buz mavisi */
         }
-        
-        /* Sidebar arka plan */
+
+        /* Sidebar */
         section[data-testid="stSidebar"] {
             background: linear-gradient(to bottom, #0a0f1e, #111827) !important;
-            color: #f3f4f6 !important;
+            color: #d7ecff !important;
         }
-        
-        /* Sidebar başlıkları – net beyaz */
+
+        /* Sidebar başlıkları */
         .stSidebar h1, .stSidebar h2, .stSidebar h3, .stSidebar h4, .stSidebar h5 {
-            color: #ffffff !important;
+            color: #e8f5ff !important;  /* daha parlak ice-blue */
         }
-        
-        /* Sidebar slider / select / radio etiketleri – okunabilir hale getir */
+
+        /* Slider / Select / Radio label’ları */
         .stSlider label, 
         .stRadio label,
         .stMultiSelect label,
         .stSelectbox label {
-            color: #e5e7eb !important;
+            color: #c9e8ff !important; 
             font-weight: 600;
         }
-        
+
         /* Expander başlığı */
         .streamlit-expanderHeader {
-            color: #e5e7eb !important;
+            color: #c9e8ff !important;
             font-weight: 600;
         }
-        
+
         /* KPI kartları */
         .kpi-card {
-            background: rgba(17, 24, 39, 0.9); /* çok koyu lacivert-grimsi */
-            border: 1px solid #1f2937;
+            background: rgba(17, 24, 39, 0.92);
+            border: 1px solid #233044;
             border-radius: 1rem;
             padding: 1.2rem 1.4rem;
-            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
-            color: #f9fafb !important; /* tam açık */
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+            color: #e8f7ff !important;
         }
-        
-        /* KPI iç etiketler */
+
         .kpi-label {
             font-size: 0.8rem;
             text-transform: uppercase;
-            color: #cbd5e1 !important; /* daha açık gri */
+            color: #b7dbff !important;  /* ice-blue label */
             letter-spacing: 0.07em;
         }
-        
-        /* KPI değer */
+
         .kpi-value {
             font-size: 1.7rem;
             font-weight: 700;
             color: #ffffff !important;
         }
-        
-        /* KPI alt yazı */
+
         .kpi-sub {
             font-size: 0.85rem;
-            color: #d1d5db !important;
+            color: #b2d8ff !important;
         }
-        
-        /* Tabs – daha modern */
+
+        /* Tabs */
         .stTabs [data-baseweb="tab"] {
-            color: #d1d5db !important;
+            color: #b4d9ff !important;
         }
         .stTabs [data-baseweb="tab"]:hover {
-            color: #ffffff !important;
-            font-weight: 600;
+            color: #e8f5ff !important;
         }
         .stTabs [aria-selected="true"] {
             color: #ffffff !important;
             font-weight: 700 !important;
-            border-bottom: 3px solid #facc15 !important; /* sarı vurgulu */
-        }
-        
-        /* Dataframe header */
-        [data-testid="dataframe"] th {
-            color: #ffffff !important;
+            border-bottom: 3px solid #6ec9ff !important; /* ice-blue highlight */
         }
 
+        /* Dataframe header */
+        [data-testid="dataframe"] th {
+            color: #e8f7ff !important;
+        }
+
+        /* Dropdown arrow, slider knob, radio buttons */
+        .stSelectbox div[data-baseweb="select"] svg,
+        .stMultiSelect div[data-baseweb="select"] svg,
+        .stSlider > div > div > div > div {
+            color: #8ed8ff !important;
+        }
+
+        </style>
         """
     else:
         css = """
