@@ -620,7 +620,20 @@ def inject_css(theme: str):
         </style>
         """
     st.markdown(css, unsafe_allow_html=True)
-
+# =========================================================
+# KPI GRID LAYOUT (Palantir responsive)
+# =========================================================
+st.markdown("""
+<style>
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 22px;
+    width: 100%;
+    margin-top: 15px;
+}
+</style>
+""", unsafe_allow_html=True)
 # =========================================================
 # DATA & HEALTH SCORE
 # =========================================================
@@ -750,7 +763,20 @@ def build_similarity_matrix(data: pd.DataFrame):
     return sim
 
 sim_matrix = build_similarity_matrix(df)
-
+# =========================================================
+# KPI COMPONENT
+# =========================================================
+def create_kpi(title, value, subtext="", icon="📊"):
+    st.markdown(
+        f"""
+        <div class="kpi-card">
+            <h3><span class="kpi-icon">{icon}</span> {title}</h3>
+            <p class="value">{value}</p>
+            <p>{subtext}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 # =========================================================
 # CATEGORY STATE (sidebar'dan ÖNCE OLMALI!)
 # =========================================================
@@ -913,49 +939,16 @@ with tab1:
         top_health_food = top_health_row["food_name"]
 
         with c1:
-            st.markdown(
-                f"""
-                <div class="kpi-card">
-                  <div class="kpi-label">{t('kpi_total_foods', lang)}</div>
-                  <div class="kpi-value">{total_foods}</div>
-                  <div class="kpi-sub">{t('table_food', lang)}</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            create_kpi(t('kpi_total_foods', lang), total_foods, t('table_food', lang), "📦")
+
         with c2:
-            st.markdown(
-                f"""
-                <div class="kpi-card">
-                  <div class="kpi-label">{t('kpi_total_categories', lang)}</div>
-                  <div class="kpi-value">{total_categories}</div>
-                  <div class="kpi-sub">unique</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            create_kpi(t('kpi_total_categories', lang), total_categories, "unique", "🗂️")
+        
         with c3:
-            st.markdown(
-                f"""
-                <div class="kpi-card">
-                  <div class="kpi-label">{t('kpi_median_calories', lang)}</div>
-                  <div class="kpi-value">{median_cal}</div>
-                  <div class="kpi-sub">{nl('calories', lang)}</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            create_kpi(t('kpi_median_calories', lang), median_cal, nl('calories', lang), "🔥")
+        
         with c4:
-            st.markdown(
-                f"""
-                <div class="kpi-card">
-                  <div class="kpi-label">{t('kpi_top_health', lang)}</div>
-                  <div class="kpi-value">{top_health_score}</div>
-                  <div class="kpi-sub">{top_health_food}</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            create_kpi(t('kpi_top_health', lang), top_health_score, top_health_food, "💚")
 
         st.markdown("")
 
