@@ -58,6 +58,12 @@ TEXT = {
     "kpi_total_categories": {"tr": "Kategori Sayısı", "en": "Categories"},
     "kpi_median_calories": {"tr": "Medyan Kalori", "en": "Median Calories"},
     "kpi_top_health": {"tr": "En Yüksek Sağlık Skoru", "en": "Top Health Score"},
+    "sidebar_control": {"tr": "Kontrol Paneli", "en": "Control Panel"},
+    "compare_detail": {"tr": "Detay", "en": "Detail"},
+    "recom_howmany": {"tr": "Kaç benzer gıda listelensin?", "en": "How many similar foods?"},
+    "recom_button": {"tr": "Benzer Gıdaları Bul", "en": "Find Similar Foods"},
+    "ml_predict_button": {"tr": "Kalori Tahmin Et", "en": "Predict Calories"},
+
     "section_category_macros": {
         "tr": "Kategori Bazlı Ortalama Makro Dağılımı",
         "en": "Average Macro Distribution by Category",
@@ -754,13 +760,14 @@ selected_categories = st.session_state.selected_categories
 # SIDEBAR
 # =========================================================
 with st.sidebar:
-    st.markdown("### 🧭 Control Panel")
+    st.markdown(f"### 🧭 {t('sidebar_control', lang)}")
 
     lang_choice = st.radio(
-        "Language",
-        options=list(LANG_MAP.keys()),
-        index=0,
+    t("sidebar_language", lang),
+    options=list(LANG_MAP.keys()),
+    index=0,
     )
+
     lang = LANG_MAP[lang_choice]
 
     theme_choice = st.radio(
@@ -1118,7 +1125,7 @@ with tab3:
         )
         st.plotly_chart(fig_radar, use_container_width=True)
 
-        st.markdown("#### Detail")
+      st.markdown(f"#### {t('compare_detail', lang)}")
         st.dataframe(
             cmp_df[["food_name"] + nutrients].reset_index(drop=True),
             use_container_width=True,
@@ -1142,7 +1149,7 @@ with tab4:
         c_val = st.number_input(nl("carbs", lang), 0.0, 150.0, 10.0, step=1.0)
         f_val = st.number_input(nl("fat", lang), 0.0, 100.0, 5.0, step=1.0)
 
-        if st.button("Predict Calories", key="pred_button"):
+        if st.button(t("ml_predict_button", lang), key="pred_button"):
             pred = cal_model.predict(np.array([[p_val, c_val, f_val]]))[0]
             st.success(f"Estimated Calories: **{pred:.1f} kcal**")
 
@@ -1232,9 +1239,12 @@ with tab6:
     food_list = df["food_name"].tolist()
     base_food = st.selectbox("Food", options=food_list)
 
-    top_n = st.slider("How many similar foods?", min_value=3, max_value=15, value=8)
+    top_n = st.slider(
+    t("recom_howmany", lang),
+    min_value=3, max_value=15, value=8
+    )
 
-    if st.button("Find Similar Foods", key="recom_button"):
+    if st.button(t("recom_button", lang), key="recom_button"):
         idx = df[df["food_name"] == base_food].index[0]
         sims = sim_matrix[idx]
 
