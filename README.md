@@ -19,174 +19,6 @@ Located in `media/Demo-Video.mp4`
 
 ---
 
-# 📑 Table of Contents
-- [Overview](#overview-en)
-- [Scientific Foundation](#scientific-foundation-en)
-- [Key Features](#key-features-en)
-- [Architecture](#project-architecture-en)
-- [Screenshots](#screenshots-en)
-- [Results](#results-en)
-- [Use Cases](#use-cases-en)
-- [Tech Stack](#tech-stack-en)
-- [Installation](#installation-en)
-- [Author](#author-en)
-- [Turkish Version](#🇹🇷-türkçe-versiyon)
-- [References](#📚-references--kaynakça)
-
----
-
-# 📌 Overview (EN)
-
-**Food Nutrition Intelligence** is an interactive nutrition analytics platform analyzing nutrient profiles of **150+ everyday foods**, providing:
-
-- Scientifically grounded calorie prediction  
-- Nutrient-based clustering & PCA-powered 2D Food Map  
-- Intelligent food similarity & recommendation engine  
-- Smart Picks (high-protein, low-calorie, vitamin-rich lists)  
-- Bilingual TR/EN interface  
-- Modern UI with dark/light themes  
-
----
-
-# 📚 Scientific Foundation (EN)
-
-This project aligns with:
-
-**Rüede et al. (2020)**  
-*Multi-Task Learning for Calorie Prediction on a Novel Large-Scale Recipe Dataset Enriched with Nutritional Information.*
-
-Key insights:
-
-- Macronutrients = strongest predictors of calorie content  
-- Single-task calorie models → **R² ≈ 0.30–0.40**  
-- Multi-task & ingredient-level modeling improves accuracy  
-- Nutrition data has **low-dimensional structure** (PCA)
-
-➡️ This project’s Ridge Regression model achieved **CV R² = 0.36**, matching the scientific accuracy range.
-
----
-
-# 🧠 Key Features (EN)
-
-### ✔ **1. Calorie Prediction**
-Predicts calories from protein, carbs, and fats using Ridge Regression.
-
-### ✔ **2. PCA + Clustering**
-- PCA explains **99.6% variance**  
-- Natural nutrient clusters visualized in 2D
-
-### ✔ **3. Recommendation Engine**
-Cosine similarity recommends nutritionally similar foods.
-
-### ✔ **4. Smart Picks**
-- High protein  
-- Low calorie  
-- High Vitamin C  
-- High iron  
-
-### ✔ **5. Modern UI**
-- Light/Dark theme  
-- TR/EN bilingual  
-
----
-
-# 🏗 Project Architecture (EN)
-
-```
-Food Nutrition Intelligence
-├── Data Layer
-│   ├── USDA-based Kaggle dataset
-│   └── Cleaning & normalization
-│
-├── Machine Learning
-│   ├── Calorie Model (Ridge Regression)
-│   ├── PCA (2D reduction)
-│   ├── K-Means clustering
-│   └── Cosine similarity recommendation engine
-│
-├── Visualization
-│   ├── Plotly interactive charts
-│   ├── 2D Food Map
-│   └── Radar comparison charts
-│
-└── Streamlit UI
-    ├── Explorer
-    ├── Compare
-    ├── ML Lab
-    └── Recommendation
-```
-
----
-
-# 🖼 Screenshots (EN)
-
-<p align="center"><img src="images/overview.png" width="80%"></p>
-<p align="center"><img src="images/explorer.png" width="80%"></p>
-<p align="center"><img src="images/compare.png" width="80%"></p>
-<p align="center"><img src="images/ml_lab.png" width="80%"></p>
-<p align="center"><img src="images/recommend.png" width="80%"></p>
-
----
-
-# 📊 Results (EN)
-
-### **Calorie Model**
-- CV R²: **0.36**  
-- Matches scientific expectations (0.30–0.40)
-
-### **PCA**
-- Explained variance: **99.6%**
-
-### **Clustering**
-- Natural groupings: fruits, meats, snacks, bakery items  
----
-
-# 💡 Use Cases (EN)
-
-- Diet planning  
-- Food comparison  
-- Recipe development  
-- Healthy alternative discovery  
-- Nutrition education  
-- FMCG & food analytics  
-
----
-
-# 🛠 Tech Stack (EN)
-
-- Python  
-- Streamlit  
-- Pandas  
-- NumPy  
-- scikit-learn  
-- Plotly  
-- PCA / K-Means  
-- Cosine Similarity  
-
----
-
-# ⚙ Installation (EN)
-
-```bash
-pip install -r requirements.txt
-streamlit run app.py
-```
-
----
-
-# 👤 Author (EN)
-
-**Özge Güneş**
-
----
-
-# 🇹🇷 Türkçe Versiyon
-
-# 🍏 Food Nutrition Intelligence — Besin Zekâsı Platformu
-
-🌐 Canlı Demo:  
-https://food-nutrition-intelligence.streamlit.app/
-
 📊 Veri Seti:  
 https://www.kaggle.com/datasets/henryshan/food-nutrition-dataset
 
@@ -195,87 +27,100 @@ https://www.kaggle.com/datasets/henryshan/food-nutrition-dataset
 
 ---
 
-# 📌 Genel Bakış (TR)
+## 🚀 Project Overview
+**Food Nutrition Intelligence** is a machine learning platform designed to analyze the nutrient profiles of **200+ foods** and provide meaningful nutritional insights.
 
-Food Nutrition Intelligence, **150+ gün­­lük gıdanın besin profillerini** analiz eden modern bir besin analitiği platformudur.
+The system performs:
+- **Calorie prediction** using Ridge Regression  
+- **Clustering** based on nutrient similarity  
+- **Similarity-based food recommendations**  
+- **2D PCA-based Nutrient Profile Map**  
+- **Interactive visualization** via Streamlit  
+- **Bilingual UI (EN/TR)**  
 
-- Bilimsel kalori tahmini  
-- PCA + K‑Means ile 2D Besin Haritası  
-- Benzer gıda öneri sistemi  
-- Smart Picks (yüksek protein, düşük kalori vb.)  
-- TR/EN arayüz  
-- Modern tema desteği  
+This project was developed as part of continuous data science practice, with an emphasis on scientific transparency and practical ML application.
 
----
+## 📌 Scientific Foundation
+This project is inspired by:
 
-# 📚 Bilimsel Temel (TR)
+**Rüede et al. (2020)**  
+*Multi-Task Learning for Calorie Prediction on a Novel Large-Scale Recipe Dataset Enriched with Nutritional Information.*
 
-Proje şu çalışmaya dayanmaktadır:
+Key insights from the literature:
+- Macronutrients are strong—but incomplete—predictors of calorie content.  
+- Models trained only on macronutrients naturally show **limited predictive power**, because they lack critical information such as:
+  - Cooking method  
+  - Moisture loss  
+  - Fat absorption  
+  - Processing level  
+  - Ingredient composition  
+- Multi-task and ingredient-level models significantly improve accuracy.  
+- Nutrition data often exhibits a **low-dimensional structure**, making PCA an effective tool for exploration.
 
-**Rüede ve ark. (2020)**  
-*Multi-Task Learning for Calorie Prediction…*
+In this project, a Ridge Regression model trained solely on the three macronutrients (fat, protein, carbohydrates) achieved a **cross-validated R² of 0.36**.  
+This modest performance is consistent with the **expected behavior of macro-only models**, whose predictive capacity is inherently limited by missing preparation-related features (see e.g., Rüede et al., 2020).
 
-Öne çıkan bulgular:
+## 📈 Results
+### 🔹 Calorie Model
+- **CV R²:** 0.36  
+- **Interpretation:**  
+  The model performs exactly as expected for macro-only calorie prediction, where limited feature diversity caps predictive power.
 
-- Makro besinler kalorinin en güçlü belirleyicisidir  
-- Tek görevli modellerde doğruluk **R² ≈ %30–40**  
-- Ridge Regression modeli **CV R² = %36**  
-→ Bilimsel doğrulukla uyumludur  
+### 🔹 Clustering
+- K-Means clustering  
+- Scaled nutrient profiles  
+- Visual cluster boundaries displayed in the Streamlit app  
 
----
+### 🔹 Similarity Engine
+- Cosine similarity matrix  
+- “Top similar foods” recommendation tool  
 
-# 🧠 Temel Özellikler (TR)
+### 🔹 PCA Nutrient Map
+- 2 principal components capture **99.6%** of total variance  
+- 2D interactive nutrient landscape via Plotly  
 
-### ✔ **Kalori Tahmini**
-Protein / Karbonhidrat / Yağ’dan kalori tahmini
+## 🧭 Features & Capabilities
+- ✔ Ridge Regression with sklearn pipeline  
+- ✔ StandardScaler preprocessing  
+- ✔ K-Means clustering & silhouette-based tuning  
+- ✔ Cosine similarity recommendations  
+- ✔ PCA dimensionality reduction  
+- ✔ Streamlit UI with bilingual support  
+- ✔ Clean modular code structure  
 
-### ✔ **PCA + Kümeleme**
-%99.6 varyans açıklama
+## 🌐 Live Demo
+👉 https://lnkd.in/diGSfhrY
 
-### ✔ **Öneri Motoru**
-Cosine similarity ile benzer besin bulma
+## 📁 GitHub Repository
+👉 https://github.com/ozgunes91/food-nutrition-intelligence
 
-### ✔ **Smart Picks**
-Yüksek protein, düşük kalori vb.
-
-### ✔ **Modern Arayüz**
-TR/EN destekli  
-
----
-
-# 🏗 Proje Mimarisi (TR)
+## 🗂️ Repository Structure
+```
+food-nutrition-intelligence/
+│
+├── app.py
+├── Food_Nutrition_Dataset.csv           
+├── requirements.txt
+├── README.md
+├── images
+├── media
 
 ```
-Food Nutrition Intelligence
-├── Veri Katmanı
-│   ├── USDA tabanlı Kaggle veri seti
-│   └── Temizleme & normalizasyon
-│
-├── Makine Öğrenimi
-│   ├── Kalori Modeli (Ridge Regression)
-│   ├── PCA (2 boyut indirgeme)
-│   ├── K-Means kümeleme
-│   └── Cosine similarity öneri motoru
-│
-├── Görselleştirme
-│   ├── Plotly grafikler
-│   ├── 2D Besin Haritası
-│   └── Radar karşılaştırmalar
-│
-└── Streamlit UI
-    ├── Explorer
-    ├── Compare
-    ├── ML Lab
-    └── Recommendation
-```
 
----
+## 🛠️ Tech Stack
+- **Python**
+- **Pandas, NumPy**
+- **Scikit-learn**
+- **Plotly**
+- **Streamlit**
+- **Cosine similarity**
+- **PCA**
 
-# 📚 **References / Kaynakça**
+## 📚 Reference
+Rüede, R. et al. (2020).  
+*Multi-Task Learning for Calorie Prediction from Food Images.*  
+arXiv:2011.01082.
 
-Rüede, R., Heusser, V., Frank, L., Roitberg, A., Haurilet, M., & Stiefelhagen, R. (2020).  
-*Multi-Task Learning for Calorie Prediction on a Novel Large-Scale Recipe Dataset Enriched with Nutritional Information.*  
-arXiv:2011.01082
-
----
-
+## ✨ Feedback
+This project was created for learning, experimentation, and portfolio development.  
+Feedback and suggestions are always welcome!
